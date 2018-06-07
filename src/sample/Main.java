@@ -42,7 +42,7 @@ public class Main extends Application implements Measurements{
         background.setFitWidth(600);
         background.setFitHeight(350);
 
-        Image ship = new Image("/Images/tank.png");
+        Image ship = new Image("/Images/Ship.png");
         shipView = new ImageView(ship);
         shipView.setFitHeight(40);
         shipView.setFitWidth(80);
