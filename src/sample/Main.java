@@ -28,7 +28,7 @@ TO-DO:
 
 */
 
-public class Main extends Application {
+public class Main extends Application implements Measurements{
 
     Pane pane = new Pane();
     EnemyAliens ea = new EnemyAliens(pane);
@@ -46,7 +46,7 @@ public class Main extends Application {
         shipView = new ImageView(ship);
         shipView.setFitHeight(40);
         shipView.setFitWidth(80);
-        Tools.setCoordinates(shipView, 0, 720);
+        Tools.setCoordinates(shipView, 0, 780);
 
 //        ea.displayGrid();
         pane.getChildren().addAll(shipView);
@@ -59,9 +59,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 //        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));\
 
-        ea.createAlienGrid();
+//        ea.createAlienGrid();
         ea.displayGrid();
-        Scene scene = new Scene(Content(), 1100, 750);
+        Scene scene = new Scene(Content(), screenWidth, screenHeight);
         scene.setFill(Color.BLACK);
         primaryStage.setTitle("Space Invaders!");
         primaryStage.setScene(scene);
@@ -79,7 +79,7 @@ public class Main extends Application {
             @Override
             public void handle(KeyEvent event) {
 
-                if (event.getCode() == KeyCode.RIGHT && shipView.getLayoutX() <= 1020) {
+                if (event.getCode() == KeyCode.RIGHT && shipView.getLayoutX() <= 720) {
                     velx += 10;
                     shipView.setLayoutX(velx);
                     System.out.println(velx);
