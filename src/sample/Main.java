@@ -44,11 +44,7 @@ public class Main extends Application implements Measurements {
         background.setFitWidth(600);
         background.setFitHeight(350);
 
-<<<<<<< HEAD
         Image ship = new Image("/Images/Spaceship.png");
-=======
-        Image ship = new Image("/Images/Ship.png");
->>>>>>> 2dd78a7d3592622deee8181d24bdaf894fcf216f
         shipView = new ImageView(ship);
         shipView.setFitHeight(40);
         shipView.setFitWidth(80);

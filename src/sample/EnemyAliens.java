@@ -204,7 +204,7 @@ public class EnemyAliens extends Properties implements Measurements {
 //    }
 
 
-        public void stopMovement() {
+    public void stopMovement() {
         for (int i = 0; i < alienGrid.length; i++) {
             for (int j = 0; j < alienGrid[0].length; j++) {
 //                System.out.println("HELLO X: " + alienGrid[i][j].getX());
