@@ -13,6 +13,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import java.lang.*;
 
 import javax.swing.*;
 import java.net.URISyntaxException;
@@ -28,12 +29,13 @@ TO-DO:
 
 */
 
-public class Main extends Application implements Measurements{
+public class Main extends Application implements Measurements {
 
     Pane pane = new Pane();
-    EnemyAliens ea = new EnemyAliens(pane);
     ImageView shipView;
     Timer timer;
+    EnemyAliens ea = new EnemyAliens(pane);
+
 
     private Parent Content() {
 
@@ -42,11 +44,11 @@ public class Main extends Application implements Measurements{
         background.setFitWidth(600);
         background.setFitHeight(350);
 
-        Image ship = new Image("/Images/tank.png");
+        Image ship = new Image("/Images/Spaceship.png");
         shipView = new ImageView(ship);
         shipView.setFitHeight(40);
         shipView.setFitWidth(80);
-        Tools.setCoordinates(shipView, 0, 780);
+        Tools.setCoordinates(shipView, 0, 670);
 
 //        ea.displayGrid();
         pane.getChildren().addAll(shipView);
@@ -69,17 +71,15 @@ public class Main extends Application implements Measurements{
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/Images/Space-invaders-logo.png")));
         primaryStage.show();
 
-
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
-            int velx = 0;
             double velMissileCount = 750;
-
+            int velx = 0;
 
             @Override
             public void handle(KeyEvent event) {
 
-                if (event.getCode() == KeyCode.RIGHT && shipView.getLayoutX() <= 720) {
+                if (event.getCode() == KeyCode.RIGHT && shipView.getLayoutX() <= 620) {
                     velx += 10;
                     shipView.setLayoutX(velx);
                     System.out.println(velx);
@@ -101,12 +101,10 @@ public class Main extends Application implements Measurements{
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
-
-                    Fire f = new Fire(pane, velx);
+                    Fire f = new Fire(pane, velx, ea.getAlienGrid());
 
                 }
             }
-
         });
     }
 

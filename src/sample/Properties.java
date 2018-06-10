@@ -2,27 +2,41 @@ package sample;
 
 public class Properties {
 
-    double speed;
 
-    public void setSpeed(double speed) {
+    int enemyEdge = 40;
+    int enemyRow = 4;
+    int enemyColumn = 10;
+    int alienSpeed = 4;
+
+
+    public int EnemyEdge() {
+
+        //The edge enemy aliens can go to
+
+        return enemyEdge;
+    }
+
+    public int EnemyRow() {
+
+        //Number of enemy alien rows
+
+        return enemyRow;
+    }
+
+
+    public int EnemyColumn() {
+
+        //Number of enemy alien columns
+
+        return enemyColumn;
+    }
+
+    public int AlienSpeed() {
 
         //Speed of enemy aliens
 
-        this.speed = speed;
+        return alienSpeed;
     }
 
-    public double getSpeed() {
-
-        //Speed of enemy aliens
-
-        return speed;
-    }
-
-    public void checkGame() {
-
-        /*
-            if enemy go below (x, y), the game ends
-        */
-
-    }
 }
+
