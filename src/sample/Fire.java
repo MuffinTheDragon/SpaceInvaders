@@ -8,17 +8,24 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.net.URISyntaxException;
 
-public class Fire {
+public class Fire extends EnemyAliens{
 
-    Timeline tlB;
+    public static Timeline tlB;
     Image missile = new Image("/Images/missile.png");
     ImageView missileView = null;
     boolean bullet = true;
     Pane p;
+    static int points = 0;
+    Font arcade = Font.loadFont(Main.class.getResource("/Fonts/ARCADE_I.ttf").toExternalForm(), 25);
+
+    static final Text score = new Text(0, 25, "Score: " + points);
 
 
 //    ImageView[][] alienGrid = new ImageView[EnemyRow()][EnemyColumn()];
@@ -32,6 +39,8 @@ public class Fire {
         if (missileView == null) {
             this.p = p;
             missileView = new ImageView(missile);
+            score.setFill(Color.YELLOW);
+            score.setFont(arcade);
             p.getChildren().add(missileView);
             missileView.setX(position + 30); //position of ship + 35 units
             missileView.setY(640);
@@ -47,6 +56,7 @@ public class Fire {
             tlB = new Timeline(fB);
             tlB.setCycleCount(Animation.INDEFINITE);
             tlB.play();
+
         }
     }
 //
@@ -92,6 +102,9 @@ public class Fire {
                         System.out.println("Test");
                         alienGrid[i][j].setVisible(false);
                         alienGrid[i][j] = null;
+                        alienNullCount += 1;
+                        points += 100;
+                        score.setText("Score: " + points);
                         try {
                             Media media = new Media(getClass().getResource("/Sounds/explosion.wav").toURI().toString());
                             MediaPlayer player = new MediaPlayer(media);
@@ -101,7 +114,6 @@ public class Fire {
                         }
                         bulletHit();
                         bullet = false;
-//                        score += 100;
                     }
                 }
             }

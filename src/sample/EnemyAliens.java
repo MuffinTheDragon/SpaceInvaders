@@ -8,11 +8,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.net.URISyntaxException;
+import java.util.Random;
 
 public class EnemyAliens extends Properties implements Measurements {
 
@@ -31,29 +34,35 @@ public class EnemyAliens extends Properties implements Measurements {
     ImageView[] alien = new ImageView[EnemyRow() * EnemyColumn()];
     Fire f;
 
+    Image enemyBullet = new Image("/Images/bullet.png");
+    ImageView alienBullet;
     Image largeInvader = new Image("/Images/large_invader_a.png");
     Image mediumInvader = new Image("/Images/medium_invader_a.png");
     Image mediumInvaderA;
     Image mediumInvaderB;
     Image smallInvader;
     Timeline timeline;
-    Timeline tl;
+    Timeline alienTimeline;
     int score;
     int time = 28;
+    int bulletTime = 28;
     int move = 0;
     boolean right = true;
     static Rectangle pointer = new Rectangle();
-    Text gameOver = new Text("Game Over!");
 
     Rectangle rec = null;
     boolean bullet = true;
+    boolean loss = false;
 
+    static int alienNullCount = 0;
+    Font arcade = Font.loadFont(Main.class.getResource("/Fonts/ARCADE_I.ttf").toExternalForm(), 75);
 
 
     public EnemyAliens(Pane p) {
         super();
         this.p = p;
     }
+
 
     public EnemyAliens() {
 
@@ -204,7 +213,7 @@ public class EnemyAliens extends Properties implements Measurements {
 //    }
 
 
-    public void stopMovement() {
+    public boolean stopMovement() {
         for (int i = 0; i < alienGrid.length; i++) {
             for (int j = 0; j < alienGrid[0].length; j++) {
 //                System.out.println("HELLO X: " + alienGrid[i][j].getX());
@@ -212,11 +221,16 @@ public class EnemyAliens extends Properties implements Measurements {
                 if (alienGrid[i][j] != null && alienGrid[i][j].getY() >= 700) {
 //                    Add AlertBox functionality
                     timeline.stop();
+                    Text gameOver = new Text(0, 350, "Game Over!");
+                    gameOver.setFill(Color.YELLOW);
+                    gameOver.setFont(arcade);
+                    p.getChildren().add(gameOver);
                     try {
                         Media media = new Media(getClass().getResource("/Sounds/Game Over.mp3").toURI().toString());
                         MediaPlayer player = new MediaPlayer(media);
                         player.setVolume(1000);
                         player.play();
+                        loss = true;
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
@@ -226,9 +240,25 @@ public class EnemyAliens extends Properties implements Measurements {
 
 
 //    Text Not Being Added
+                } else if (alienNullCount == 40) {
+                    timeline.stop();
+                    Text win = new Text(130, 350, "Winner!");
+                    win.setFill(Color.YELLOW);
+                    win.setFont(arcade);
+                    p.getChildren().add(win);
+                    try {
+                        Media media = new Media(getClass().getResource("/Sounds/Victory.mp3").toURI().toString());
+                        MediaPlayer player = new MediaPlayer(media);
+                        player.setVolume(1000);
+                        player.play();
+                        loss = true;
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
+        return loss;
     }
 
 //        if (f != null) {
@@ -301,6 +331,38 @@ public class EnemyAliens extends Properties implements Measurements {
 //        return alienGrid;
 //    }
 
+    public void alienFire() {
+
+        for (int i = 0; i < alienGrid.length; i++) {
+            for (int j = 0; j < alienGrid[0].length; j++) {
+                while (!stopMovement()) {
+                    Random rn = new Random();
+                    int row = rn.nextInt(4);
+                    int col = rn.nextInt(10);
+
+
+                    if (alienGrid[row][col] != null) {
+                        alienBullet = new ImageView(enemyBullet);
+                        p.getChildren().add(alienBullet);
+                        alienBullet.setX(alienGrid[row][col].getX());
+                        alienBullet.setY(alienGrid[row][col].getY());
+
+                        bulletTime -= 3;
+
+                        Duration duration = new Duration(1000);
+                        KeyFrame keyFrame = new KeyFrame(duration, e -> {
+//                        alienBullet.setX(alienBullet.getX() + 5);
+                            alienBullet.setY(alienBullet.getY() + 5);
+                        });
+
+                        alienTimeline = new Timeline(keyFrame);
+                        alienTimeline.setCycleCount(Animation.INDEFINITE);
+                        alienTimeline.play();
+                    }
+                }
+            }
+        }
+    }
 
     public ImageView[][] getAlienGrid() {
         return alienGrid;

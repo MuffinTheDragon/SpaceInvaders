@@ -12,10 +12,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import java.lang.*;
 
 import javax.swing.*;
+import javafx.scene.text.Text;
 import java.net.URISyntaxException;
 
 
@@ -50,8 +52,9 @@ public class Main extends Application implements Measurements {
         shipView.setFitWidth(80);
         Tools.setCoordinates(shipView, 0, 670);
 
+
 //        ea.displayGrid();
-        pane.getChildren().addAll(shipView);
+        pane.getChildren().addAll(shipView, Fire.score);
 
         return pane;
     }
@@ -62,7 +65,9 @@ public class Main extends Application implements Measurements {
 //        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));\
 
 //        ea.createAlienGrid();
+
         ea.displayGrid();
+//        ea.alienFire();
         Scene scene = new Scene(Content(), screenWidth, screenHeight);
         scene.setFill(Color.BLACK);
         primaryStage.setTitle("Space Invaders!");
@@ -79,15 +84,15 @@ public class Main extends Application implements Measurements {
             @Override
             public void handle(KeyEvent event) {
 
-                if (event.getCode() == KeyCode.RIGHT && shipView.getLayoutX() <= 620) {
+                if (event.getCode() == KeyCode.RIGHT && shipView.getLayoutX() <= 620 && !ea.stopMovement()) {
                     velx += 10;
                     shipView.setLayoutX(velx);
                     System.out.println(velx);
-                } else if (event.getCode() == KeyCode.LEFT && shipView.getLayoutX() >= 10) {
+                } else if (event.getCode() == KeyCode.LEFT && shipView.getLayoutX() >= 10 && !ea.stopMovement()) {
                     velx -= 10;
                     shipView.setLayoutX(velx);
                     System.out.println(velx);
-                } else if (event.getCode() == KeyCode.SPACE) {
+                } else if (event.getCode() == KeyCode.SPACE && !ea.stopMovement()) {
 //                    while (velMissileCount >= 0) {
 ////                        velMissileCount -= 10;
 ////                        missileView.setLayoutY(velMissileCount);
