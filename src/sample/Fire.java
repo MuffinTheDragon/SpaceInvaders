@@ -15,11 +15,14 @@ import javafx.util.Duration;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.util.Random;
 
 public class Fire extends EnemyAliens {
 
     public static Timeline tlB;
     Image missile = new Image("/Images/missile.png");
+    Image enemyBullet = new Image("/Images/bullet.png");
+    ImageView alienBullet = null;
     ImageView missileView = null;
     boolean bullet = true;
     Pane p;
@@ -62,7 +65,7 @@ public class Fire extends EnemyAliens {
                 if (missileView != null) {
                     missileView.setY(missileView.getY() - 5);
 //            System.out.println("Missile Y:" + missileView.getY());
-                    hit(alienGrid);
+                    alienHit(alienGrid);
                     scores();
                 }
             });
@@ -71,6 +74,41 @@ public class Fire extends EnemyAliens {
             tlB.setCycleCount(Animation.INDEFINITE);
             tlB.play();
 
+        }
+        if (alienBullet == null) {
+            alienBullet = new ImageView(enemyBullet);
+            p.getChildren().add(alienBullet);
+            Timeline timeline;
+            Random rn = new Random();
+            int row = rn.nextInt(4);
+            int col = rn.nextInt(10);
+
+            if (alienGrid[row][col] != null) {
+                alienBullet.setX(alienGrid[row][col].getX());
+                alienBullet.setY(alienGrid[row][col].getY());
+
+
+                System.out.println("X: " + alienBullet.getX());
+                System.out.println("Y: " + alienBullet.getY());
+
+                System.out.println("SHIP X:" + Main.shipView.getLayoutX());
+                System.out.println("SHIP Y:" + Main.shipView.getLayoutY());
+
+
+                Duration duration = new Duration(5);
+                KeyFrame keyFrame = new KeyFrame(duration, e -> {
+                    if (alienBullet != null) {
+                        alienBullet.setY(alienBullet.getY() + 5);
+//                        shipHit();
+                        scores();
+                    }
+                });
+
+                timeline = new Timeline(keyFrame);
+                timeline.setCycleCount(Animation.INDEFINITE);
+                timeline.play();
+
+            }
         }
     }
 //
@@ -100,12 +138,28 @@ public class Fire extends EnemyAliens {
 //    missileView.setFitWidth(30);
 //    missileView.setFitHeight(50);
 
+
     public void bulletHit() {
         p.getChildren().remove(missileView);
         missileView = null;
     }
 
-    public boolean hit(ImageView alienGrid[][]) {
+//    public boolean shipHit() {
+//        if (alienBullet.getX() == Main.shipView.getLayoutX()) {
+//            System.out.println("YSESSSSSSS");
+//            try {
+//                Media m = new Media(getClass().getResource("/Sounds/explosion.wav").toURI().toString());
+//                MediaPlayer p = new MediaPlayer(m);
+//                p.play();
+//                shipHit = true;
+//            } catch (URISyntaxException e) {
+//                System.out.println("Error: " + e);
+//            }
+//        }
+//        return shipHit;
+//    }
+
+    public boolean alienHit(ImageView alienGrid[][]) {
         for (int i = 0; i < alienGrid.length; i++) {
             for (int j = 0; j < alienGrid[0].length; j++) {
                 if (missileView != null && alienGrid[i][j] != null) {
@@ -148,6 +202,7 @@ public class Fire extends EnemyAliens {
 
         return bullet;
     }
+
 
 //    private void createSaveData() {
 //        try {
@@ -196,6 +251,7 @@ public class Fire extends EnemyAliens {
 //        }
 //    }
 
+
     public void scores() {
         score.setText("Score: " + points);
 //                        setHighScore();
@@ -215,7 +271,7 @@ public class Fire extends EnemyAliens {
             sRecord = br.readLine();
             lastScore = Integer.parseInt(sRecord);
             gameHighScore.setText("High Score: " + lastScore);
-            System.out.println("" + lastScore);
+//            System.out.println("" + lastScore);
             br.close();
             fr.close();
         } catch (Exception e) {
@@ -238,5 +294,4 @@ public class Fire extends EnemyAliens {
             }
         }
     }
-
 }

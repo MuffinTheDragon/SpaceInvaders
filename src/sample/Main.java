@@ -34,7 +34,7 @@ TO-DO:
 public class Main extends Application implements Measurements {
 
     Pane pane = new Pane();
-    ImageView shipView;
+    static ImageView shipView;
     Timer timer;
     EnemyAliens ea = new EnemyAliens(pane);
 
@@ -68,8 +68,9 @@ public class Main extends Application implements Measurements {
 
         ea.displayGrid();
 //        ea.alienFire();
-        Fire fire = new Fire(pane, 0, ea.getAlienGrid());
-        fire.scores();
+//        Fire fire = new Fire(pane, 0, ea.getAlienGrid());
+//        Fire.scores();
+        //        fire.alienFire();
         Scene scene = new Scene(Content(), screenWidth, screenHeight);
         scene.setFill(Color.BLACK);
         primaryStage.setTitle("Space Invaders!");

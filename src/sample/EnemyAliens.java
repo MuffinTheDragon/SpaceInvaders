@@ -42,8 +42,6 @@ public class EnemyAliens extends Properties implements Measurements {
     Image mediumInvaderB;
     Image smallInvader;
     Timeline timeline;
-    Timeline alienTimeline;
-    int score;
     int time = 28;
     int bulletTime = 28;
     int move = 0;
@@ -52,9 +50,10 @@ public class EnemyAliens extends Properties implements Measurements {
 
     Rectangle rec = null;
     boolean bullet = true;
-    boolean loss = false;
+    boolean game = false;
 
     static int alienNullCount = 0;
+    static boolean shipHit = false;
     Font arcade = Font.loadFont(Main.class.getResource("/Fonts/ARCADE_I.ttf").toExternalForm(), 75);
 
 
@@ -115,7 +114,6 @@ public class EnemyAliens extends Properties implements Measurements {
 //        return score;
 //    }
 //
-
 
     public void alienMovement() {
         if (right) {
@@ -218,7 +216,7 @@ public class EnemyAliens extends Properties implements Measurements {
             for (int j = 0; j < alienGrid[0].length; j++) {
 //                System.out.println("HELLO X: " + alienGrid[i][j].getX());
 //                System.out.println("HELLO Y: " + alienGrid[i][j].getY());
-                if (alienGrid[i][j] != null && alienGrid[i][j].getY() >= 700) {
+                if (alienGrid[i][j] != null && alienGrid[i][j].getY() >= 700 || shipHit) {
 //                    Add AlertBox functionality
                     timeline.stop();
                     Text gameOver = new Text(0, 350, "Game Over!");
@@ -230,16 +228,11 @@ public class EnemyAliens extends Properties implements Measurements {
                         MediaPlayer player = new MediaPlayer(media);
                         player.setVolume(1000);
                         player.play();
-                        loss = true;
+                        game = true;
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
-//                    gameOver.setFont(Font.font("Verdana", 20));
-//                    gameOver.setFill(Color.YELLOW);
-//                    p.getChildren().add(gameOver);
 
-
-//    Text Not Being Added
                 } else if (alienNullCount == 40) {
                     timeline.stop();
                     Text win = new Text(130, 350, "Winner!");
@@ -251,15 +244,45 @@ public class EnemyAliens extends Properties implements Measurements {
                         MediaPlayer player = new MediaPlayer(media);
                         player.setVolume(1000);
                         player.play();
-                        loss = true;
+                        game = true;
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
                 }
             }
         }
-        return loss;
+        return game;
     }
+
+//    public void alienFire() {
+//        if (alienBullet == null) {
+//            alienBullet = new ImageView(enemyBullet);
+//            Timeline alienTimeline;
+//            p.getChildren().add(alienBullet);
+//            Random rn = new Random();
+//            System.out.println("WHILE TEST");
+//            int row = rn.nextInt(4);
+//            int col = rn.nextInt(10);
+//
+//            while (alienNullCount != 40) {
+//                if (alienGrid[row][col] != null) {
+//                    alienBullet.setX(alienGrid[row][col].getX());
+//                    alienBullet.setY(alienGrid[row][col].getY());
+//
+//                    Duration duration = new Duration(5);
+//                    KeyFrame keyFrame = new KeyFrame(duration, e -> {
+//                        if (alienBullet != null) {
+//                            alienBullet.setY(alienBullet.getY() + 5);
+//                        }
+//                    });
+//                    alienTimeline = new Timeline(keyFrame);
+//                    alienTimeline.setCycleCount(Animation.INDEFINITE);
+//                    alienTimeline.play();
+//                }
+//            }
+//        }
+//    }
+
 
 //        if (f != null) {
 //            score += f.getScore();
@@ -331,38 +354,6 @@ public class EnemyAliens extends Properties implements Measurements {
 //        return alienGrid;
 //    }
 
-    public void alienFire() {
-
-        for (int i = 0; i < alienGrid.length; i++) {
-            for (int j = 0; j < alienGrid[0].length; j++) {
-                while (!stopMovement()) {
-                    Random rn = new Random();
-                    int row = rn.nextInt(4);
-                    int col = rn.nextInt(10);
-
-
-                    if (alienGrid[row][col] != null) {
-                        alienBullet = new ImageView(enemyBullet);
-                        p.getChildren().add(alienBullet);
-                        alienBullet.setX(alienGrid[row][col].getX());
-                        alienBullet.setY(alienGrid[row][col].getY());
-
-                        bulletTime -= 3;
-
-                        Duration duration = new Duration(1000);
-                        KeyFrame keyFrame = new KeyFrame(duration, e -> {
-//                        alienBullet.setX(alienBullet.getX() + 5);
-                            alienBullet.setY(alienBullet.getY() + 5);
-                        });
-
-                        alienTimeline = new Timeline(keyFrame);
-                        alienTimeline.setCycleCount(Animation.INDEFINITE);
-                        alienTimeline.play();
-                    }
-                }
-            }
-        }
-    }
 
     public ImageView[][] getAlienGrid() {
         return alienGrid;

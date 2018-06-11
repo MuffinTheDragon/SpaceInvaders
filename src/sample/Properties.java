@@ -6,7 +6,7 @@ public class Properties {
     int enemyEdge = 40;
     int enemyRow = 4;
     int enemyColumn = 10;
-    int alienSpeed = 4;
+    int alienSpeed = 2;
 
 
     public int EnemyEdge() {
