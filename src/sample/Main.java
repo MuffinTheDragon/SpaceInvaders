@@ -68,8 +68,8 @@ public class Main extends Application implements Measurements {
 
         ea.displayGrid();
 //        ea.alienFire();
-//        Fire fire = new Fire(pane, 0, ea.getAlienGrid());
-//        Fire.scores();
+        Fire fire = new Fire(pane, 0, ea.getAlienGrid());
+        fire.scores();
         //        fire.alienFire();
         Scene scene = new Scene(Content(), screenWidth, screenHeight);
         scene.setFill(Color.BLACK);

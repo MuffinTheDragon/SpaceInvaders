@@ -75,6 +75,9 @@ public class Fire extends EnemyAliens {
             tlB.play();
 
         }
+        /*
+        Enemy fire code
+
         if (alienBullet == null) {
             alienBullet = new ImageView(enemyBullet);
             p.getChildren().add(alienBullet);
@@ -110,6 +113,7 @@ public class Fire extends EnemyAliens {
 
             }
         }
+        */
     }
 //
 //    public ImageView[][] alienGrid() {
