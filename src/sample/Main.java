@@ -22,19 +22,16 @@ import java.net.URISyntaxException;
 
 
 /*
-
 TO-DO:
-
 1. Import custom arcade font
 2. Import alien missiles
 3. Make sure you can't just hold down SPACE
-
 */
 
 public class Main extends Application implements Measurements {
 
     Pane pane = new Pane();
-    static ImageView shipView;
+    ImageView shipView;
     Timer timer;
     EnemyAliens ea = new EnemyAliens(pane);
 
@@ -68,9 +65,6 @@ public class Main extends Application implements Measurements {
 
         ea.displayGrid();
 //        ea.alienFire();
-        Fire fire = new Fire(pane, 0, ea.getAlienGrid());
-        fire.scores();
-        //        fire.alienFire();
         Scene scene = new Scene(Content(), screenWidth, screenHeight);
         scene.setFill(Color.BLACK);
         primaryStage.setTitle("Space Invaders!");
@@ -99,6 +93,7 @@ public class Main extends Application implements Measurements {
 //                    System.out.println(velx);
                 } else if (event.getCode() == KeyCode.SPACE && !ea.stopMovement()) {
                     timerAfter = System.currentTimeMillis();
+
                     if (timerAfter - timerBefore <= 100) {
                         event.consume();
                     } else {
