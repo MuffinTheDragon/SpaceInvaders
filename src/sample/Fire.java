@@ -47,12 +47,6 @@ public class Fire extends EnemyAliens {
 
     public Fire(Pane p, int position, ImageView[][] alienGrid) {
         super();
-
-        try {
-            saveDataPath = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-        } catch (Exception e) {
-        }
-
         if (missileView == null) {
             this.p = p;
             missileView = new ImageView(missile);
@@ -69,6 +63,7 @@ public class Fire extends EnemyAliens {
                     missileView.setY(missileView.getY() - 5);
 //            System.out.println("Missile Y:" + missileView.getY());
                     hit(alienGrid);
+                    scores();
                 }
             });
 
@@ -128,46 +123,6 @@ public class Fire extends EnemyAliens {
                         alienGrid[i][j] = null;
                         alienNullCount += 1;
                         points += 100;
-                        score.setText("Score: " + points);
-//                        setHighScore();
-//                        if (points >= highScore) {
-//                            highScore = points;
-//                            gameHighScore.setText("High Score: " + highScore);
-//                        }
-
-                        String k = System.getProperty("user.home");
-                        n = k + File.separator + "GameSaveData.txt";
-//                        System.out.println(n);
-
-
-                        try {
-                            FileReader fr = new FileReader(n);
-                            BufferedReader br = new BufferedReader(fr);
-                            sRecord = br.readLine();
-                            lastScore = Integer.parseInt(sRecord);
-                            gameHighScore.setText("High Score: " + lastScore);
-                            System.out.println("" + lastScore);
-                            br.close();
-                            fr.close();
-                        } catch (Exception e) {
-
-                        }
-                        if (points >= lastScore) {
-                            highScore = points;
-                            gameHighScore.setText("High Score: " + highScore);
-//                        if (points > highScore) {
-
-
-                            try {
-                                FileWriter fw = new FileWriter(n);
-                                BufferedWriter bw = new BufferedWriter(fw);
-                                bw.write("" + highScore);
-                                bw.close();
-                                fw.close();
-                            } catch (Exception e) {
-                                points = 0;
-                            }
-                        }
 
 
                         try {
@@ -240,5 +195,48 @@ public class Fire extends EnemyAliens {
 //            e.printStackTrace();
 //        }
 //    }
+
+    public void scores() {
+        score.setText("Score: " + points);
+//                        setHighScore();
+//                        if (points >= highScore) {
+//                            highScore = points;
+//                            gameHighScore.setText("High Score: " + highScore);
+//                        }
+
+        String k = System.getProperty("user.home");
+        n = k + File.separator + "GameSaveData.txt";
+//                        System.out.println(n);
+
+
+        try {
+            FileReader fr = new FileReader(n);
+            BufferedReader br = new BufferedReader(fr);
+            sRecord = br.readLine();
+            lastScore = Integer.parseInt(sRecord);
+            gameHighScore.setText("High Score: " + lastScore);
+            System.out.println("" + lastScore);
+            br.close();
+            fr.close();
+        } catch (Exception e) {
+
+        }
+        if (points >= lastScore) {
+            highScore = points;
+            gameHighScore.setText("High Score: " + highScore);
+//                        if (points > highScore) {
+
+
+            try {
+                FileWriter fw = new FileWriter(n);
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write("" + highScore);
+                bw.close();
+                fw.close();
+            } catch (Exception e) {
+                points = 0;
+            }
+        }
+    }
 
 }
