@@ -54,7 +54,7 @@ public class Main extends Application implements Measurements {
 
 
 //        ea.displayGrid();
-        pane.getChildren().addAll(shipView, Fire.score);
+        pane.getChildren().addAll(shipView, Fire.score, Fire.gameHighScore);
 
         return pane;
     }
@@ -87,11 +87,11 @@ public class Main extends Application implements Measurements {
                 if (event.getCode() == KeyCode.RIGHT && shipView.getLayoutX() <= 620 && !ea.stopMovement()) {
                     velx += 10;
                     shipView.setLayoutX(velx);
-                    System.out.println(velx);
+//                    System.out.println(velx);
                 } else if (event.getCode() == KeyCode.LEFT && shipView.getLayoutX() >= 10 && !ea.stopMovement()) {
                     velx -= 10;
                     shipView.setLayoutX(velx);
-                    System.out.println(velx);
+//                    System.out.println(velx);
                 } else if (event.getCode() == KeyCode.SPACE && !ea.stopMovement()) {
 //                    while (velMissileCount >= 0) {
 ////                        velMissileCount -= 10;

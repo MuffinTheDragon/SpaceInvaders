@@ -13,9 +13,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import java.io.*;
 import java.net.URISyntaxException;
 
-public class Fire extends EnemyAliens{
+public class Fire extends EnemyAliens {
 
     public static Timeline tlB;
     Image missile = new Image("/Images/missile.png");
@@ -23,9 +24,19 @@ public class Fire extends EnemyAliens{
     boolean bullet = true;
     Pane p;
     static int points = 0;
+    int lastScore = 0;
+    int highScore = 0;
+
+    //Saving
+    String saveDataPath;
+    String fileName = "SaveData";
+    String n;
+    String sRecord;
+
     Font arcade = Font.loadFont(Main.class.getResource("/Fonts/ARCADE_I.ttf").toExternalForm(), 25);
 
     static final Text score = new Text(0, 25, "Score: " + points);
+    static final Text gameHighScore = new Text(300, 25, "HighScore: " + points);
 
 
 //    ImageView[][] alienGrid = new ImageView[EnemyRow()][EnemyColumn()];
@@ -36,11 +47,19 @@ public class Fire extends EnemyAliens{
 
     public Fire(Pane p, int position, ImageView[][] alienGrid) {
         super();
+
+        try {
+            saveDataPath = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+        } catch (Exception e) {
+        }
+
         if (missileView == null) {
             this.p = p;
             missileView = new ImageView(missile);
             score.setFill(Color.YELLOW);
             score.setFont(arcade);
+            gameHighScore.setFill(Color.YELLOW);
+            gameHighScore.setFont(arcade);
             p.getChildren().add(missileView);
             missileView.setX(position + 30); //position of ship + 35 units
             missileView.setY(640);
@@ -99,12 +118,58 @@ public class Fire extends EnemyAliens{
                             && missileView.getX() + 10 > alienGrid[i][j].getX()
                             && missileView.getY() < alienGrid[i][j].getY() + alienGrid[i][j].getFitHeight()
                             && 50 + missileView.getY() > alienGrid[i][j].getY())) {
-                        System.out.println("Test");
+//                        System.out.println("Test");
+                        Image explosion = new Image("/Images/explosion.gif");
+                        ImageView shipExplosion = new ImageView(explosion);
+                        shipExplosion.setX(alienGrid[i][j].getX());
+                        shipExplosion.setY(alienGrid[i][j].getY());
+                        p.getChildren().add(shipExplosion);
                         alienGrid[i][j].setVisible(false);
                         alienGrid[i][j] = null;
                         alienNullCount += 1;
                         points += 100;
                         score.setText("Score: " + points);
+//                        setHighScore();
+//                        if (points >= highScore) {
+//                            highScore = points;
+//                            gameHighScore.setText("High Score: " + highScore);
+//                        }
+
+                        String k = System.getProperty("user.home");
+                        n = k + File.separator + "GameSaveData.txt";
+//                        System.out.println(n);
+
+
+                        try {
+                            FileReader fr = new FileReader(n);
+                            BufferedReader br = new BufferedReader(fr);
+                            sRecord = br.readLine();
+                            lastScore = Integer.parseInt(sRecord);
+                            gameHighScore.setText("High Score: " + lastScore);
+                            System.out.println("" + lastScore);
+                            br.close();
+                            fr.close();
+                        } catch (Exception e) {
+
+                        }
+                        if (points >= lastScore) {
+                            highScore = points;
+                            gameHighScore.setText("High Score: " + highScore);
+//                        if (points > highScore) {
+
+
+                            try {
+                                FileWriter fw = new FileWriter(n);
+                                BufferedWriter bw = new BufferedWriter(fw);
+                                bw.write("" + highScore);
+                                bw.close();
+                                fw.close();
+                            } catch (Exception e) {
+                                points = 0;
+                            }
+                        }
+
+
                         try {
                             Media media = new Media(getClass().getResource("/Sounds/explosion.wav").toURI().toString());
                             MediaPlayer player = new MediaPlayer(media);
@@ -128,5 +193,52 @@ public class Fire extends EnemyAliens{
 
         return bullet;
     }
+
+//    private void createSaveData() {
+//        try {
+//            File file = new File(saveDataPath, fileName);
+//
+//            FileWriter output = new FileWriter(file);
+//            BufferedWriter writer = new BufferedWriter(output);
+//            writer.write("" + 0);
+//            writer.close();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    private void loadHighScore() {
+//        try {
+//            File f = new File(saveDataPath, fileName);
+//            if (!f.isFile()) {
+//                createSaveData();
+//            }
+//
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+//            highScore = Integer.parseInt(reader.readLine());
+//            reader.close();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    private void setHighScore() {
+//        FileWriter output = null;
+//
+//        try {
+//            File f = new File(saveDataPath, fileName);
+//            output = new FileWriter(f);
+//            BufferedWriter writer = new BufferedWriter(output);
+//
+//            writer.write("" + highScore);
+//
+//            writer.close();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 }
