@@ -80,6 +80,8 @@ public class Main extends Application implements Measurements {
 
             double velMissileCount = 750;
             int velx = 0;
+            long timerBefore = 0;
+            long timerAfter;
 
             @Override
             public void handle(KeyEvent event) {
@@ -93,21 +95,28 @@ public class Main extends Application implements Measurements {
                     shipView.setLayoutX(velx);
 //                    System.out.println(velx);
                 } else if (event.getCode() == KeyCode.SPACE && !ea.stopMovement()) {
+                    timerAfter = System.currentTimeMillis();
+
+                    if (timerAfter - timerBefore <= 100) {
+                        event.consume();
+                    } else {
 //                    while (velMissileCount >= 0) {
 ////                        velMissileCount -= 10;
 ////                        missileView.setLayoutY(velMissileCount);
 ////                        System.out.println(velMissileCount);
 //                    }
 //                    velMissileCount = 1100;
-                    try {
-                        Media media = new Media(getClass().getResource("/Sounds/shoot.wav").toURI().toString());
-                        MediaPlayer player = new MediaPlayer(media);
-                        player.play();
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-                    Fire f = new Fire(pane, velx, ea.getAlienGrid());
+                        try {
+                            Media media = new Media(getClass().getResource("/Sounds/shoot.wav").toURI().toString());
+                            MediaPlayer player = new MediaPlayer(media);
+                            player.play();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                        Fire f = new Fire(pane, velx, ea.getAlienGrid());
 
+                    }
+                    timerBefore = System.currentTimeMillis();
                 }
             }
         });
