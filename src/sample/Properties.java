@@ -3,10 +3,10 @@ package sample;
 public class Properties {
 
 
-    int enemyEdge = 40;
-    int enemyRow = 4;
-    int enemyColumn = 10;
-    int alienSpeed = 2;
+    private int enemyEdge = 40;
+    private int enemyRow = 4;
+    private int enemyColumn = 10;
+    private int alienSpeed = 1;
 
 
     public int EnemyEdge() {

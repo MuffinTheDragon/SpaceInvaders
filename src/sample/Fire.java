@@ -75,45 +75,45 @@ public class Fire extends EnemyAliens {
             tlB.play();
 
         }
-        /*
-        Enemy fire code
 
-        if (alienBullet == null) {
-            alienBullet = new ImageView(enemyBullet);
-            p.getChildren().add(alienBullet);
-            Timeline timeline;
-            Random rn = new Random();
-            int row = rn.nextInt(4);
-            int col = rn.nextInt(10);
+//        Enemy fire code
+//
+//        if (alienBullet == null) {
+//            alienBullet = new ImageView(enemyBullet);
+//            p.getChildren().add(alienBullet);
+//            Timeline timeline;
+//            Random rn = new Random();
+//            int row = rn.nextInt(4);
+//            int col = rn.nextInt(10);
+//
+//            if (alienGrid[row][col] != null) {
+//                alienBullet.setX(alienGrid[row][col].getX());
+//                alienBullet.setY(alienGrid[row][col].getY());
+//
+//
+////                System.out.println("X: " + alienBullet.getX());
+////                System.out.println("Y: " + alienBullet.getY());
+////
+////                System.out.println("SHIP X:" + Main.shipView.getLayoutX());
+////                System.out.println("SHIP Y:" + Main.shipView.getLayoutY());
+//
+//
+//                Duration duration = new Duration(5);
+//                KeyFrame keyFrame = new KeyFrame(duration, e -> {
+//                    if (alienBullet != null) {
+//                        alienBullet.setY(alienBullet.getY() + 5);
+////                        shipHit();
+//                        scores();
+//                    }
+//                });
+//
+//                timeline = new Timeline(keyFrame);
+//                timeline.setCycleCount(Animation.INDEFINITE);
+//                timeline.play();
+//
+//            }
+//        }
 
-            if (alienGrid[row][col] != null) {
-                alienBullet.setX(alienGrid[row][col].getX());
-                alienBullet.setY(alienGrid[row][col].getY());
-
-
-                System.out.println("X: " + alienBullet.getX());
-                System.out.println("Y: " + alienBullet.getY());
-
-                System.out.println("SHIP X:" + Main.shipView.getLayoutX());
-                System.out.println("SHIP Y:" + Main.shipView.getLayoutY());
-
-
-                Duration duration = new Duration(5);
-                KeyFrame keyFrame = new KeyFrame(duration, e -> {
-                    if (alienBullet != null) {
-                        alienBullet.setY(alienBullet.getY() + 5);
-//                        shipHit();
-                        scores();
-                    }
-                });
-
-                timeline = new Timeline(keyFrame);
-                timeline.setCycleCount(Animation.INDEFINITE);
-                timeline.play();
-
-            }
-        }
-        */
     }
 //
 //    public ImageView[][] alienGrid() {

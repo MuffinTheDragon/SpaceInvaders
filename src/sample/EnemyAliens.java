@@ -42,6 +42,7 @@ public class EnemyAliens extends Properties implements Measurements {
     Image mediumInvaderB;
     Image smallInvader;
     Timeline timeline;
+    Timeline alienTimeline;
     int time = 28;
     int bulletTime = 28;
     int move = 0;
@@ -254,40 +255,42 @@ public class EnemyAliens extends Properties implements Measurements {
         return game;
     }
 
-//    public void alienFire() {
-//        if (alienBullet == null) {
-//            alienBullet = new ImageView(enemyBullet);
-//            Timeline alienTimeline;
-//            p.getChildren().add(alienBullet);
-//            Random rn = new Random();
-//            System.out.println("WHILE TEST");
-//            int row = rn.nextInt(4);
-//            int col = rn.nextInt(10);
-//
-//            while (alienNullCount != 40) {
-//                if (alienGrid[row][col] != null) {
-//                    alienBullet.setX(alienGrid[row][col].getX());
-//                    alienBullet.setY(alienGrid[row][col].getY());
-//
-//                    Duration duration = new Duration(5);
-//                    KeyFrame keyFrame = new KeyFrame(duration, e -> {
-//                        if (alienBullet != null) {
-//                            alienBullet.setY(alienBullet.getY() + 5);
-//                        }
-//                    });
-//                    alienTimeline = new Timeline(keyFrame);
-//                    alienTimeline.setCycleCount(Animation.INDEFINITE);
-//                    alienTimeline.play();
-//                }
+    public void alienFire() {
+        alienBullet = new ImageView(enemyBullet);
+        p.getChildren().add(alienBullet);
+//        System.out.println("WHILE TEST");
+
+        for (int i = 0; i < alienGrid.length; i++) {
+            for (int j = 0; j < alienGrid[0].length; j++) {
+
+                if (alienGrid[i][j] != null && alienBullet.getY() <= 700) {
+                    alienBullet.setX(alienGrid[i][j].getX());
+                    alienBullet.setY(alienGrid[i][j].getY());
+
+                } else {
+                    System.out.println("NO");
+                }
+            }
+        }
+
+        for (int i = 0; i < alienGrid.length; i++) {
+            for (int j = 0; j < alienGrid[0].length; j++) {
+
+                if (alienGrid[i][j] != null) {
+                    alienBullet.setY(alienBullet.getY() + 10);
+                }
+            }
+        }
+
+//        Duration duration = new Duration(5);
+//        KeyFrame keyFrame = new KeyFrame(duration, e -> {
+//            if (alienGrid[row][j] != null) {
+//                alienBullet.setY(alienBullet.getY() + 5);
 //            }
-//        }
-//    }
-
-
-//        if (f != null) {
-//            score += f.getScore();
-//            scoreText.setText("Score: " + score);
-//        }
+//        });
+//        alienTimeline = new Timeline(keyFrame);
+//        alienTimeline.setCycleCount(Animation.INDEFINITE);
+    }
 
 
     public void displayGrid() {
@@ -345,6 +348,15 @@ public class EnemyAliens extends Properties implements Measurements {
         timeline = new Timeline(frame);
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
+
+
+        Duration duration = new Duration(5);
+        KeyFrame keyFrame = new KeyFrame(duration, e -> alienFire());
+        alienTimeline = new Timeline(keyFrame);
+        alienTimeline.setCycleCount(Animation.INDEFINITE);
+        alienTimeline.play();
+
+
     }
 
     //21:46:06
