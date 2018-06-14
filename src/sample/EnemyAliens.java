@@ -61,6 +61,42 @@ public class EnemyAliens extends Properties implements Measurements {
     public EnemyAliens(Pane p) {
         super();
         this.p = p;
+//
+//        if (alienBullet == null) {
+//            alienBullet = new ImageView(enemyBullet);
+//            p.getChildren().add(alienBullet);
+//            Timeline alienTime;
+//            Random rn = new Random();
+//            int row = rn.nextInt(4);
+//            int col = rn.nextInt(10);
+//
+//            if (alienGrid[row][col] != null) {
+//                alienBullet.setX(alienGrid[row][col].getX());
+//                alienBullet.setY(alienGrid[row][col].getY());
+//
+//
+////                System.out.println("X: " + alienBullet.getX());
+////                System.out.println("Y: " + alienBullet.getY());
+////
+////                System.out.println("SHIP X:" + Main.shipView.getLayoutX());
+////                System.out.println("SHIP Y:" + Main.shipView.getLayoutY());
+//
+//
+//                Duration duration = new Duration(5);
+//                KeyFrame keyFrame = new KeyFrame(duration, e -> {
+//                    if (alienBullet != null) {
+//                        alienBullet.setY(alienBullet.getY() + 5);
+////                        shipHit();
+//                    }
+//                });
+//
+//                alienTime = new Timeline(keyFrame);
+//                alienTime.setCycleCount(Animation.INDEFINITE);
+//                alienTime.play();
+//
+//
+//            }
+//        }
     }
 
 
@@ -263,25 +299,29 @@ public class EnemyAliens extends Properties implements Measurements {
         for (int i = 0; i < alienGrid.length; i++) {
             for (int j = 0; j < alienGrid[0].length; j++) {
 
-                if (alienGrid[i][j] != null && alienBullet.getY() <= 700) {
-                    alienBullet.setX(alienGrid[i][j].getX());
+                if (alienGrid[i][j] != null) {
+                    alienBullet.setX(alienGrid[i][j].getX() + 5);
                     alienBullet.setY(alienGrid[i][j].getY());
 
-                } else {
-                    System.out.println("NO");
+//                } else {
+//
+//                    System.out.println("NO");
+//                }
                 }
             }
         }
 
-        for (int i = 0; i < alienGrid.length; i++) {
-            for (int j = 0; j < alienGrid[0].length; j++) {
+            for (int i = 0; i < alienGrid.length; i++) {
+                for (int j = 0; j < alienGrid[0].length; j++) {
 
-                if (alienGrid[i][j] != null) {
-                    alienBullet.setY(alienBullet.getY() + 10);
+                    if (alienGrid[i][j] != null) {
+                        alienBullet.setY(alienBullet.getY() + 10);
+                    } else {
+                        System.out.println("send help");
+                    }
                 }
             }
-        }
-
+//
 //        Duration duration = new Duration(5);
 //        KeyFrame keyFrame = new KeyFrame(duration, e -> {
 //            if (alienGrid[row][j] != null) {
@@ -290,7 +330,7 @@ public class EnemyAliens extends Properties implements Measurements {
 //        });
 //        alienTimeline = new Timeline(keyFrame);
 //        alienTimeline.setCycleCount(Animation.INDEFINITE);
-    }
+        }
 
 
     public void displayGrid() {
@@ -349,12 +389,12 @@ public class EnemyAliens extends Properties implements Measurements {
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
 
-
-        Duration duration = new Duration(5);
-        KeyFrame keyFrame = new KeyFrame(duration, e -> alienFire());
-        alienTimeline = new Timeline(keyFrame);
-        alienTimeline.setCycleCount(Animation.INDEFINITE);
-        alienTimeline.play();
+//
+//        Duration duration = new Duration(5);
+//        KeyFrame keyFrame = new KeyFrame(duration, e -> alienFire());
+//        alienTimeline = new Timeline(keyFrame);
+//        alienTimeline.setCycleCount(Animation.INDEFINITE);
+//        alienTimeline.play();
 
 
     }

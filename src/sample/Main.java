@@ -36,7 +36,7 @@ public class Main extends Application implements Measurements {
     Pane pane = new Pane();
     static ImageView shipView;
     Timer timer;
-    EnemyAliens ea = new EnemyAliens(pane);
+
 
 
     private Parent Content() {
@@ -65,6 +65,7 @@ public class Main extends Application implements Measurements {
 //        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));\
 
 //        ea.createAlienGrid();
+        EnemyAliens ea = new EnemyAliens(pane);
 
         ea.displayGrid();
 //        ea.alienFire();
