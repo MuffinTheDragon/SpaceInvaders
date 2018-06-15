@@ -78,41 +78,45 @@ public class Fire extends EnemyAliens {
 
 //        Enemy fire code
 //
-//        if (alienBullet == null) {
-//            alienBullet = new ImageView(enemyBullet);
-//            p.getChildren().add(alienBullet);
-//            Timeline timeline;
-//            Random rn = new Random();
-//            int row = rn.nextInt(4);
-//            int col = rn.nextInt(10);
-//
-//            if (alienGrid[row][col] != null) {
-//                alienBullet.setX(alienGrid[row][col].getX());
-//                alienBullet.setY(alienGrid[row][col].getY());
-//
-//
-////                System.out.println("X: " + alienBullet.getX());
-////                System.out.println("Y: " + alienBullet.getY());
-////
-////                System.out.println("SHIP X:" + Main.shipView.getLayoutX());
-////                System.out.println("SHIP Y:" + Main.shipView.getLayoutY());
-//
-//
-//                Duration duration = new Duration(5);
-//                KeyFrame keyFrame = new KeyFrame(duration, e -> {
-//                    if (alienBullet != null) {
-//                        alienBullet.setY(alienBullet.getY() + 5);
-////                        shipHit();
-//                        scores();
-//                    }
-//                });
-//
-//                timeline = new Timeline(keyFrame);
-//                timeline.setCycleCount(Animation.INDEFINITE);
-//                timeline.play();
-//
-//            }
-//        }
+        if (alienBullet == null) {
+            alienBullet = new ImageView(enemyBullet);
+            p.getChildren().add(alienBullet);
+            Timeline timeline;
+            Random rn = new Random();
+            int row = rn.nextInt(4);
+            int col = rn.nextInt(10);
+
+
+            if (alienGrid[row][col] != null) {
+                alienBullet.setX(alienGrid[row][col].getX());
+                alienBullet.setY(alienGrid[row][col].getY());
+
+
+//                System.out.println("X: " + alienBullet.getX());
+//                System.out.println("Y: " + alienBullet.getY());
+//                System.out.println("VELX: " + Main.velx);
+//                System.out.println("BULLET Y: " + alienBullet.getY());
+//                System.out.println("BULLEt X: " + alienBullet.getX());
+//                System.out.println("SHIP X:" + Main.shipView.getLayoutX());
+//                System.out.println("SHIP Y:" + Main.shipView.getLayoutY());
+
+//                System.out.println("MISSILE Y: " + missileView.getY());
+
+                Duration duration = new Duration(5);
+                KeyFrame keyFrame = new KeyFrame(duration, e -> {
+                    if (alienBullet != null) {
+                        alienBullet.setY(alienBullet.getY() + 5);
+                        shipHit();
+                        scores();
+                    }
+                });
+
+                timeline = new Timeline(keyFrame);
+                timeline.setCycleCount(Animation.INDEFINITE);
+                timeline.play();
+
+            }
+        }
 
     }
 //
@@ -148,8 +152,27 @@ public class Fire extends EnemyAliens {
         missileView = null;
     }
 
-//    public boolean shipHit() {
-//        if (alienBullet.getX() == Main.shipView.getLayoutX()) {
+    public boolean shipHit() {
+
+        if (alienBullet != null && Main.shipView != null) {
+            if (alienBullet != null && alienBullet.getX() < Main.velx + 40 && alienBullet.getX() + 50 > Main.velx && alienBullet.getY() < 670 + 80 && 50 + alienBullet.getY() > 670) {
+                System.out.println("HALLO");
+                try {
+                    Media m = new Media(getClass().getResource("/Sounds/explosion.wav").toURI().toString());
+                    MediaPlayer p = new MediaPlayer(m);
+                    p.play();
+                    shipHit = true;
+                    Main.shipView = null;
+                } catch (URISyntaxException e) {
+                    System.out.println("Error: " + e);
+                }
+            }
+        }
+
+
+        return shipHit;
+    }
+    //        if ((alienBullet.getY() >= 600 && alienBullet.getY() <= 670) && (alienBullet.getX() == Main.velx + 80 || alienBullet.getX() == Main.velx - 80)) {
 //            System.out.println("YSESSSSSSS");
 //            try {
 //                Media m = new Media(getClass().getResource("/Sounds/explosion.wav").toURI().toString());

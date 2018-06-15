@@ -253,7 +253,7 @@ public class EnemyAliens extends Properties implements Measurements {
             for (int j = 0; j < alienGrid[0].length; j++) {
 //                System.out.println("HELLO X: " + alienGrid[i][j].getX());
 //                System.out.println("HELLO Y: " + alienGrid[i][j].getY());
-                if (alienGrid[i][j] != null && alienGrid[i][j].getY() >= 700 || shipHit) {
+                if ((alienGrid[i][j] != null && alienGrid[i][j].getY() >= 700) || shipHit) {
 //                    Add AlertBox functionality
                     timeline.stop();
                     Text gameOver = new Text(0, 350, "Game Over!");

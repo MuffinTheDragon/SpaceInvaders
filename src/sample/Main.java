@@ -28,6 +28,7 @@ TO-DO:
 1. Import custom arcade font
 2. Import alien missiles
 3. Make sure you can't just hold down SPACE
+4. Add Game Soundtrack!
 
 */
 
@@ -35,6 +36,8 @@ public class Main extends Application implements Measurements {
 
     Pane pane = new Pane();
     static ImageView shipView;
+    static int velx = 0;
+    static double shipWidth = 0;
     Timer timer;
 
 
@@ -51,6 +54,7 @@ public class Main extends Application implements Measurements {
         shipView.setFitHeight(40);
         shipView.setFitWidth(80);
         Tools.setCoordinates(shipView, 0, 670);
+
 
 
 //        ea.displayGrid();
@@ -82,8 +86,10 @@ public class Main extends Application implements Measurements {
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
+            //CALL ALIEN FIRE 
+
+
             double velMissileCount = 750;
-            int velx = 0;
             long timerBefore = 0;
             long timerAfter;
 
