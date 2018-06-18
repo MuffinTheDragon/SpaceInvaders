@@ -94,7 +94,7 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
                 KeyFrame keyFrame = new KeyFrame(duration, e -> {
                     if (alienBullet != null) {
                         alienBullet.setY(alienBullet.getY() + 1);
-                        shipHit();
+//                        shipHit();
                     }
                 });
 
@@ -154,10 +154,16 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
             if (alienBullet.getX() < Main.velx + Main.shipView.getFitWidth() && alienBullet.getX() + 1 > Main.velx &&
                     alienBullet.getY() < 670 + Main.shipView.getFitHeight() && 5 + alienBullet.getY() > 670) {
 
+                Image explosion = new Image("/Images/explosion.gif");
+                ImageView shipExplosion = new ImageView(explosion);
+                shipExplosion.setX(alienBullet.getX());
+                System.out.println();
+                shipExplosion.setY(640);
+                p.getChildren().add(shipExplosion);
+
                 //This variable determines whether or not the user's ship has been hit by enemy aliens
                 //It is then used in the stopAlienMovement() method in the EnemyAliens class to stop the game
                 shipHit = true;
-
             }
         }
     }
@@ -167,6 +173,12 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
             if (ufoRocket.getX() < Main.velx + Main.shipView.getFitWidth() && ufoRocket.getX() + 56
                     > Main.velx && ufoRocket.getY() < 670 + Main.shipView.getFitHeight() && 40 +
                     ufoRocket.getY() > 670) {
+
+                Image explosion = new Image("/Images/explosion.gif");
+                ImageView shipExplosion = new ImageView(explosion);
+                shipExplosion.setX(ufoRocket.getX());
+                shipExplosion.setY(640);
+                p.getChildren().add(shipExplosion);
 
                 //This variable determines whether or not the user's ship has been hit by the enemy UFO
                 //It is then used in the stopUFOMovement() method in the EnemyAliens class to stop the game

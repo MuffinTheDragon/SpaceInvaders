@@ -1,5 +1,8 @@
 package sample;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
@@ -12,9 +15,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.net.URISyntaxException;
 
@@ -43,10 +45,10 @@ public class Main extends Application implements GameProperties {
 
     private Parent Content() {
 
-        ImageView background = new ImageView();
-        background.setImage(new Image("/Images/background.png"));
-        background.setFitWidth(600);
-        background.setFitHeight(350);
+        Image starBackground = new Image("/Images/Stars.jpg");
+        ImageView background = new ImageView(starBackground);
+        background.setFitWidth(700);
+        background.setFitHeight(700);
 
 
         Image ship = new Image("/Images/Spaceship.png");
@@ -55,7 +57,20 @@ public class Main extends Application implements GameProperties {
         shipView.setFitWidth(80);
         Tools.setCoordinates(shipView, 0, 670);
 
-        pane.getChildren().addAll(shipView, Fire.score, Fire.gameHighScore, Fire.ufoHits);
+        Image teaser = new Image("/Images/Teaser2.jpg");
+        ImageView alienTeaser = new ImageView(teaser);
+        alienTeaser.setFitHeight(250);
+        alienTeaser.setFitWidth(550);
+        Tools.setCoordinates(alienTeaser, 100, 230);
+        Timeline timeline = new Timeline(
+                 new KeyFrame(Duration.ZERO, new KeyValue(alienTeaser.imageProperty(), teaser)),
+//                 new KeyFrame(Duration.millis(1), new KeyValue(alienTeaser.imageProperty(), teaser)),
+                 new KeyFrame(Duration.millis(3), new KeyValue(alienTeaser.opacityProperty(), 1.0)),
+                 new KeyFrame(Duration.seconds(4), new KeyValue(alienTeaser.opacityProperty(), 0))
+                );
+        timeline.play();
+
+        pane.getChildren().addAll(shipView, Fire.score, Fire.gameHighScore, Fire.ufoHits, alienTeaser);
 
         return pane;
     }
@@ -91,13 +106,15 @@ public class Main extends Application implements GameProperties {
             public void handle(KeyEvent event) { //Handle KeyEvents
 
                 //If user presses the right arrow key and the ship is within the window and the game hasn't ended:
-                if (event.getCode() == KeyCode.RIGHT && shipView.getLayoutX() <= 620 && !ea.stopAlienMovement && !ea.stopUFOMovement) {
+                if (event.getCode() == KeyCode.RIGHT && shipView.getLayoutX() <= 620 && !ea.stopAlienMovement
+                        && !ea.stopUFOMovement) {
 
                     velx += 10; //increase the x-coordinate by 10
                     shipView.setLayoutX(velx); //set the ship's x-coordinate
 
                     //If user presses the right arrow key and the ship is within the window and the game hasn't ended:
-                } else if (event.getCode() == KeyCode.LEFT && shipView.getLayoutX() >= 10 && !ea.stopAlienMovement && !ea.stopUFOMovement) {
+                } else if (event.getCode() == KeyCode.LEFT && shipView.getLayoutX() >= 10 && !ea.stopAlienMovement
+                        && !ea.stopUFOMovement) {
 
                     velx -= 10; //decrease the x-coordinate by 10
                     shipView.setLayoutX(velx); //set the ship's x-coordinate
