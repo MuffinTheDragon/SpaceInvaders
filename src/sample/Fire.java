@@ -75,7 +75,7 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
         }
 
 //        Enemy fire code
-//
+
         if (alienBullet == null) {
             Image enemyBullet = new Image("/Images/bullet.png");
             alienBullet = new ImageView(enemyBullet);
@@ -94,7 +94,7 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
                 KeyFrame keyFrame = new KeyFrame(duration, e -> {
                     if (alienBullet != null) {
                         alienBullet.setY(alienBullet.getY() + 1);
-//                        shipHit();
+                        shipHit();
                     }
                 });
 
@@ -195,7 +195,6 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
                             && missileView.getX() + 10 > alienGrid[i][j].getX()
                             && missileView.getY() < alienGrid[i][j].getY() + alienGrid[i][j].getFitHeight()
                             && 50 + missileView.getY() > alienGrid[i][j].getY())) {
-//                        System.out.println("Test");
                         Image explosion = new Image("/Images/explosion.gif");
                         ImageView shipExplosion = new ImageView(explosion);
                         shipExplosion.setX(alienGrid[i][j].getX());
@@ -227,10 +226,10 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
                 bulletHit();
             }
         }
-
     }
 
-    //This method keeps tracks of how many times user hits enemy UFO
+    //This method registers each time the user hits the enemy UFO. As well as keep track of how many times the user
+    // has hit the enemy UFO
     private void ufoHit(ImageView alienUFO) {
         if (missileView != null && alienUFO != null) {
             if (missileView.getX() < alienUFO.getX() + alienUFO.getFitWidth() && missileView.getX() + 10 > alienUFO.getX()
@@ -265,19 +264,17 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
     void scores() {
         score.setText("Score: " + points);
 
-        String k = System.getProperty("user.home");
-        String n = k + File.separator + "GameSaveData.txt";
-//                        System.out.println(n);
+        String location = System.getProperty("user.home");
+        String name = location + File.separator + "GameSaveData.txt";
 
         try {
-            FileReader fr = new FileReader(n);
-            BufferedReader br = new BufferedReader(fr);
-            String sRecord = br.readLine();
+            FileReader fileReader = new FileReader(name);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String sRecord = bufferedReader.readLine();
             lastScore = Integer.parseInt(sRecord);
             gameHighScore.setText("High Score: " + lastScore);
-//            System.out.println("" + lastScore);
-            br.close();
-            fr.close();
+            bufferedReader.close();
+            fileReader.close();
         } catch (Exception ignored) {
 
         }
@@ -287,14 +284,32 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
 
 
             try {
-                FileWriter fw = new FileWriter(n);
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write("" + highScore);
-                bw.close();
-                fw.close();
+                FileWriter fileWriter = new FileWriter(name);
+                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                bufferedWriter.write("" + highScore);
+                bufferedWriter.close();
+                fileWriter.close();
             } catch (Exception e) {
                 points = 0;
             }
         }
     }
 }
+
+
+
+
+
+
+/*
+
+    References:
+
+    1. High Scores:
+        YouTube - https://www.youtube.com/watch?v=qVDi7tk-P-g
+
+   2. Removing missiles (bullet()):
+       GitHub - https://github.com/Shindanaide/SpaceInvaders
+       GitHub - https://github.com/ajsaavedra/SpaceInvadersFX
+
+*/

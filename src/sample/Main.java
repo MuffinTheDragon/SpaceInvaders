@@ -23,12 +23,7 @@ import java.net.URISyntaxException;
 
 /*
 
-TO-DO:
-
-1. Import custom arcade font
-2. Import alien missiles
-3. Make sure you can't just hold down SPACE
-4. Add Game Soundtrack!
+Dhaval Malhotra
 
 */
 
@@ -38,18 +33,12 @@ public class Main extends Application implements GameProperties {
     static ImageView shipView = null;
     static int velx = 0;
     static int hitCounter = 0;
-    private EnemyAliens ea = new EnemyAliens(pane);
-    private Fire fire = new Fire();
+    private EnemyAliens ea = new EnemyAliens(pane); //Creating object for EnemyAliens class
+    private Fire fire = new Fire(); //Creating object for Fire class
 
 
 
     private Parent Content() {
-
-        Image starBackground = new Image("/Images/Stars.jpg");
-        ImageView background = new ImageView(starBackground);
-        background.setFitWidth(700);
-        background.setFitHeight(700);
-
 
         Image ship = new Image("/Images/Spaceship.png");
         shipView = new ImageView(ship);
@@ -64,7 +53,6 @@ public class Main extends Application implements GameProperties {
         Tools.setCoordinates(alienTeaser, 100, 230);
         Timeline timeline = new Timeline(
                  new KeyFrame(Duration.ZERO, new KeyValue(alienTeaser.imageProperty(), teaser)),
-//                 new KeyFrame(Duration.millis(1), new KeyValue(alienTeaser.imageProperty(), teaser)),
                  new KeyFrame(Duration.millis(3), new KeyValue(alienTeaser.opacityProperty(), 1.0)),
                  new KeyFrame(Duration.seconds(4), new KeyValue(alienTeaser.opacityProperty(), 0))
                 );
@@ -86,8 +74,12 @@ public class Main extends Application implements GameProperties {
                 "fortifications. \nYou will receive bonus points if you win depending on how many shots you fired " +
                 "(time your shots, don't spam space). \n\n" + "Win Condition: Kill the UFO");
 
-        ea.displayGrid();
+        ea.displayGrid(); //Calling the method in the EnemyAliens class, which displays the 2D enemy alien array
+
+        //Calling the method in the Fire class, which prints out the score and high score text on the game screen
+        // and updates them
         fire.scores();
+
         Scene scene = new Scene(Content(), screenWidth, screenHeight);
         scene.setFill(Color.BLACK);
         primaryStage.setTitle("Space Invaders!");
@@ -112,7 +104,7 @@ public class Main extends Application implements GameProperties {
                     velx += 10; //increase the x-coordinate by 10
                     shipView.setLayoutX(velx); //set the ship's x-coordinate
 
-                    //If user presses the right arrow key and the ship is within the window and the game hasn't ended:
+                    //If user presses the left arrow key and the ship is within the window and the game hasn't ended:
                 } else if (event.getCode() == KeyCode.LEFT && shipView.getLayoutX() >= 10 && !ea.stopAlienMovement
                         && !ea.stopUFOMovement) {
 
@@ -157,3 +149,21 @@ public class Main extends Application implements GameProperties {
     }
 
 }
+
+
+
+
+
+
+/*
+
+    References:
+
+    1. Fading out Image:
+        StackOverflow - https://stackoverflow.com/questions/23325488/add-timer-for-images-in-javafx?noredirect=1&lq=1
+        StackOverflow - https://stackoverflow.com/questions/31798493/java-fx-using-fade-and-timeline-transition
+
+   2. Parent Content():
+        GitHub - https://github.com/Shindanaide/SpaceInvaders
+
+*/
