@@ -196,9 +196,9 @@ class EnemyAliens extends Properties implements GameProperties {
         return stopAlienMovement;
     }
 
-    boolean stopUFOMovement() {
+    private void stopUFOMovement() {
 
-        if (ufoM != null && ufoHitCount != 10 && ufoM.getY() > 550 || ufoHit) {
+        if (ufoM != null && ufoHitCount != 100 && ufoM.getY() > 550 || ufoHit) {
 
             //Stop the game if the UFO ImageView hasn't been hit 100 times and has reached the bottom of the screen,
             // or if the user's ship has been hit
@@ -224,11 +224,13 @@ class EnemyAliens extends Properties implements GameProperties {
                 System.out.println("Error: " + e);
             }
 
-        } else if (ufoHitCount == 10) {
+        } else if (ufoHitCount == 100) {
 
             //Stop the game if the UFO ImageView has been hit 100 times
             ufoTimeline.stop();
             ufoM.setVisible(false);
+            ufoM.setY(700);
+
 
             //Create text to inform user they have won
             Text win = new Text(130, 350, "Winner!");
@@ -341,7 +343,6 @@ class EnemyAliens extends Properties implements GameProperties {
             stopUFOMovement = true; //This variable indicates that the game is now over
         }
 
-        return stopUFOMovement;
     }
 
     //Data Structures:

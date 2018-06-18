@@ -247,6 +247,7 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
                 }
                 bulletHit();
                 bullet = false;
+                scores();
             }
         }
 
