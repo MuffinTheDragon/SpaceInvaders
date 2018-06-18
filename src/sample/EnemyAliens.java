@@ -38,7 +38,7 @@ class EnemyAliens extends Properties implements GameProperties {
 
     private boolean right = true;
     private boolean ufoMove = true;
-    private boolean stopAlienMovement = false;
+    public boolean stopAlienMovement = false;
     public boolean stopUFOMovement = false;
 
     private static Rectangle pointer = new Rectangle();
@@ -158,7 +158,7 @@ class EnemyAliens extends Properties implements GameProperties {
     //Repetition:
     //The following code checks to see if the user has lost Level 1 or won Level 1
     // by iterating through the 2D array using for-loops
-    boolean stopAlienMovement() {
+    void stopAlienMovement() {
         for (int i = 0; i < EnemyRow(); i++) { //For each row in the array
             for (int j = 0; j < EnemyColumn(); j++) { //For each column in the array
 
@@ -193,7 +193,6 @@ class EnemyAliens extends Properties implements GameProperties {
         if (alienNullCount == 40) { //User killed all 40 enemy aliens
             displayUFO(); //Calling the displayUFO() method which adds the enemy UFO onto the scene
         }
-        return stopAlienMovement;
     }
 
     private void stopUFOMovement() {
