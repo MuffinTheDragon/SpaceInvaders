@@ -17,68 +17,66 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.util.Random;
 
-public class Fire extends EnemyAliens {
+class Fire extends EnemyAliens { //Inherit EnemyAliens class
 
-    public static Timeline tlB;
-    Image missile = new Image("/Images/missile.png");
-    Image enemyBullet = new Image("/Images/bullet.png");
-    ImageView alienBullet = null;
-    ImageView missileView = null;
-    boolean bullet = true;
-    Pane p;
+    private Pane p;
+    private ImageView alienBullet = null;
+    private ImageView missileView = null;
+    private ImageView ufoRocket = null;
+
+    private boolean bullet = true;
+
     static int points = 0;
-    int lastScore = 0;
-    int highScore = 0;
+    private int lastScore = 0;
 
-    //Saving
-    String saveDataPath;
-    String fileName = "SaveData";
-    String n;
-    String sRecord;
-
-    Font arcade = Font.loadFont(Main.class.getResource("/Fonts/ARCADE_I.ttf").toExternalForm(), 25);
+    private Font arcade = Font.loadFont(Main.class.getResource("/Fonts/ARCADE_I.ttf").toExternalForm(), 25);
 
     static final Text score = new Text(0, 25, "Score: " + points);
     static final Text gameHighScore = new Text(300, 25, "HighScore: " + points);
+    static final Text ufoHits = new Text(0, 55, "UFO Hits: " + ufoHitCount);
 
+    //Class constructor that requires 4 parameters
+    Fire(Pane p, int position, ImageView[][] alienGrid, ImageView alienUFO) {
 
-//    ImageView[][] alienGrid = new ImageView[EnemyRow()][EnemyColumn()];
-//    Image largeInvader = new Image("/Images/large_invader_a.png");
+        super(); //Inheriting EnemyAliens
 
-
-//    int score;
-
-    public Fire(Pane p, int position, ImageView[][] alienGrid) {
-        super();
-        if (missileView == null) {
+        if (missileView == null) { //Checks to see that the ImageView is not loaded with any images
             this.p = p;
-            missileView = new ImageView(missile);
-            score.setFill(Color.YELLOW);
-            score.setFont(arcade);
-            gameHighScore.setFill(Color.YELLOW);
-            gameHighScore.setFont(arcade);
-            p.getChildren().add(missileView);
-            missileView.setX(position + 30); //position of ship + 35 units
-            missileView.setY(640);
-            Duration dB = new Duration(5);
-            KeyFrame fB = new KeyFrame(dB, e -> {
+            Image missile = new Image("/Images/missile.png"); //Creating the missile image
+            missileView = new ImageView(missile); //Loading ImageView with Image
+            score.setFill(Color.YELLOW); //Score text color
+            score.setFont(arcade); //Score text font
+            gameHighScore.setFill(Color.YELLOW); //High score Text color
+            gameHighScore.setFont(arcade); //High score Text font
+            p.getChildren().add(missileView); //Adding missile onto stage
+
+            missileView.setX(position + 30); //position of ship + 35 units. Location where missile fires from
+            missileView.setY(640); //Located right above user's ship
+
+            //Following code is responsible for moving the missile's y-coordinates
+
+            Duration duration = new Duration(5);
+            KeyFrame keyFrame = new KeyFrame(duration, e -> {
+
+                //If the ImageView is loaded with the missile image, set its new y-coordinates to be 5 less.
+                // Do this every 5 milliseconds
                 if (missileView != null) {
                     missileView.setY(missileView.getY() - 5);
-//            System.out.println("Missile Y:" + missileView.getY());
                     alienHit(alienGrid);
                     scores();
                 }
             });
 
-            tlB = new Timeline(fB);
-            tlB.setCycleCount(Animation.INDEFINITE);
-            tlB.play();
+            Timeline timeline = new Timeline(keyFrame);
+            timeline.setCycleCount(Animation.INDEFINITE);
+            timeline.play(); //Play the animation
 
         }
 
 //        Enemy fire code
 //
         if (alienBullet == null) {
+            Image enemyBullet = new Image("/Images/bullet.png");
             alienBullet = new ImageView(enemyBullet);
             p.getChildren().add(alienBullet);
             Timeline timeline;
@@ -105,9 +103,8 @@ public class Fire extends EnemyAliens {
                 Duration duration = new Duration(5);
                 KeyFrame keyFrame = new KeyFrame(duration, e -> {
                     if (alienBullet != null) {
-                        alienBullet.setY(alienBullet.getY() + 5);
+                        alienBullet.setY(alienBullet.getY() + 1);
                         shipHit();
-                        scores();
                     }
                 });
 
@@ -118,75 +115,75 @@ public class Fire extends EnemyAliens {
             }
         }
 
+        //UFO Fire Code
+
+        //The following code is for the final stage of the game when the user kills all 40 enemy aliens
+        if (alienNullCount == 40) {
+            if (ufoRocket == null) {
+                Image ufoBullet = new Image("Images/rocket.png");
+                ufoRocket = new ImageView(ufoBullet);
+                p.getChildren().add(ufoRocket);
+                Timeline ufoTimeline;
+                Random rn = new Random();
+                int rocketPosition = rn.nextInt(680);
+
+                ufoRocket.setX(rocketPosition);
+                ufoRocket.setY(0);
+
+                Duration duration = new Duration(5);
+                KeyFrame keyFrame = new KeyFrame(duration, e -> {
+                    if (ufoRocket != null) {
+                        ufoRocket.setY(ufoRocket.getY() + 1);
+                        rocketHit();
+                        ufoHit(alienUFO);
+                    }
+                });
+
+                ufoTimeline = new Timeline(keyFrame);
+                ufoTimeline.setCycleCount(Animation.INDEFINITE);
+                ufoTimeline.play();
+            }
+        }
     }
-//
-//    public ImageView[][] alienGrid() {
-//
-//        for (int row = 0; row < EnemyRow(); row++) {
-//            for (int col = 0; col < EnemyColumn(); col++) {
-//
-//                try {
-//                    alienGrid[row][col] = new ImageView(largeInvader);
-//                    alienGrid[row][col].setPreserveRatio(true);
-//                    alienGrid[row][col].setX(col * 50);
-//                    alienGrid[row][col].setY(row * 50);
-//                    alienGrid[row][col].setFitWidth(EnemyEdge());
-//                } catch (ArrayIndexOutOfBoundsException e) {
-//
-//                }
-//            }
-//        }
-//        return alienGrid;
-//    }
 
+    Fire() {
 
-    //
-//    Image missile = new Image("/Images/missile.png");
-//    missileView = new ImageView(missile);
-//    missileView.setFitWidth(30);
-//    missileView.setFitHeight(50);
+    }
 
-
-    public void bulletHit() {
+    private void bulletHit() {
         p.getChildren().remove(missileView);
         missileView = null;
     }
 
-    public boolean shipHit() {
+    private void shipHit() {
+        //The + 1 is to give the alien bullet a width of 1 unit and the + 5 is to give the alien bullet a height of 5
+        // units
+        if (alienBullet != null) {
+            if (alienBullet.getX() < Main.velx + Main.shipView.getFitWidth() && alienBullet.getX() + 1 > Main.velx &&
+                    alienBullet.getY() < 670 +
+                    Main.shipView.getFitHeight() && 5 + alienBullet.getY() > 670) {
 
-        if (alienBullet != null && Main.shipView != null) {
-            if (alienBullet != null && alienBullet.getX() < Main.velx + 40 && alienBullet.getX() + 50 > Main.velx && alienBullet.getY() < 670 + 80 && 50 + alienBullet.getY() > 670) {
-                System.out.println("HALLO");
-                try {
-                    Media m = new Media(getClass().getResource("/Sounds/explosion.wav").toURI().toString());
-                    MediaPlayer p = new MediaPlayer(m);
-                    p.play();
-                    shipHit = true;
-                    Main.shipView = null;
-                } catch (URISyntaxException e) {
-                    System.out.println("Error: " + e);
-                }
+                //This variable determines whether or not the user's ship has been hit by enemy aliens
+                //It is then used in the stopAlienMovement() method in the EnemyAliens class to stop the game
+                shipHit = true;
+
             }
         }
-
-
-        return shipHit;
     }
-    //        if ((alienBullet.getY() >= 600 && alienBullet.getY() <= 670) && (alienBullet.getX() == Main.velx + 80 || alienBullet.getX() == Main.velx - 80)) {
-//            System.out.println("YSESSSSSSS");
-//            try {
-//                Media m = new Media(getClass().getResource("/Sounds/explosion.wav").toURI().toString());
-//                MediaPlayer p = new MediaPlayer(m);
-//                p.play();
-//                shipHit = true;
-//            } catch (URISyntaxException e) {
-//                System.out.println("Error: " + e);
-//            }
-//        }
-//        return shipHit;
-//    }
 
-    public boolean alienHit(ImageView alienGrid[][]) {
+    private void rocketHit() {
+        if (ufoRocket != null) {
+            if (ufoRocket.getX() < Main.velx + Main.shipView.getFitWidth() && ufoRocket.getX() + 1 > Main.velx &&
+                    ufoRocket.getY() < 670 + Main.shipView.getFitHeight() && 5 + ufoRocket.getY() > 670) {
+
+                //This variable determines whether or not the user's ship has been hit by the enemy UFO
+                //It is then used in the stopUFOMovement() method in the EnemyAliens class to stop the game
+                ufoHit = true;
+            }
+        }
+    }
+
+    private void alienHit(ImageView[][] alienGrid) {
         for (int i = 0; i < alienGrid.length; i++) {
             for (int j = 0; j < alienGrid[0].length; j++) {
                 if (missileView != null && alienGrid[i][j] != null) {
@@ -205,10 +202,10 @@ public class Fire extends EnemyAliens {
                         alienNullCount += 1;
                         points += 100;
 
-
                         try {
                             Media media = new Media(getClass().getResource("/Sounds/explosion.wav").toURI().toString());
                             MediaPlayer player = new MediaPlayer(media);
+                            player.setVolume(50);
                             player.play();
                         } catch (URISyntaxException e) {
                             e.printStackTrace();
@@ -227,87 +224,61 @@ public class Fire extends EnemyAliens {
             }
         }
 
-        return bullet;
     }
 
+    //This method keeps tracks of how many times user hits enemy UFO
+    private void ufoHit(ImageView alienUFO) {
+        if (missileView != null && alienUFO != null) {
+            if (missileView.getX() < alienUFO.getX() + alienUFO.getFitWidth() && missileView.getX() + 10 > alienUFO.getX()
+                    && missileView.getY() < alienUFO.getY() + alienUFO.getFitHeight() && 50 + missileView.getY() >
+                    alienUFO.getY()) {
+                ufoHitCount += 1; //Each time user successfully hits the UFO, the counter increases by 1
+                points += 50;
+                ufoHits.setFill(Color.YELLOW);
+                ufoHits.setFont(arcade);
+                ufoHits.setText("UFO Hits: " + ufoHitCount);
 
-//    private void createSaveData() {
-//        try {
-//            File file = new File(saveDataPath, fileName);
-//
-//            FileWriter output = new FileWriter(file);
-//            BufferedWriter writer = new BufferedWriter(output);
-//            writer.write("" + 0);
-//            writer.close();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private void loadHighScore() {
-//        try {
-//            File f = new File(saveDataPath, fileName);
-//            if (!f.isFile()) {
-//                createSaveData();
-//            }
-//
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
-//            highScore = Integer.parseInt(reader.readLine());
-//            reader.close();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private void setHighScore() {
-//        FileWriter output = null;
-//
-//        try {
-//            File f = new File(saveDataPath, fileName);
-//            output = new FileWriter(f);
-//            BufferedWriter writer = new BufferedWriter(output);
-//
-//            writer.write("" + highScore);
-//
-//            writer.close();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+                try {
+                    Media media = new Media(getClass().getResource("/Sounds/ufoHit.wav").toURI().toString());
+                    MediaPlayer mediaPlayer = new MediaPlayer(media);
+                    mediaPlayer.play();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                bulletHit();
+                bullet = false;
+            }
+        }
 
+        if (missileView != null) {
+            if (missileView.getY() < 0 - 50 - 1) {
+                bulletHit();
+            }
+        }
+    }
 
-    public void scores() {
+    void scores() {
         score.setText("Score: " + points);
-//                        setHighScore();
-//                        if (points >= highScore) {
-//                            highScore = points;
-//                            gameHighScore.setText("High Score: " + highScore);
-//                        }
 
         String k = System.getProperty("user.home");
-        n = k + File.separator + "GameSaveData.txt";
+        String n = k + File.separator + "GameSaveData.txt";
 //                        System.out.println(n);
-
 
         try {
             FileReader fr = new FileReader(n);
             BufferedReader br = new BufferedReader(fr);
-            sRecord = br.readLine();
+            String sRecord = br.readLine();
             lastScore = Integer.parseInt(sRecord);
             gameHighScore.setText("High Score: " + lastScore);
 //            System.out.println("" + lastScore);
             br.close();
             fr.close();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
         if (points >= lastScore) {
-            highScore = points;
+            int highScore = points;
             gameHighScore.setText("High Score: " + highScore);
-//                        if (points > highScore) {
 
 
             try {

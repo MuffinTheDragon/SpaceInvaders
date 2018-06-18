@@ -13,11 +13,9 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
-import java.lang.*;
-
-import javax.swing.*;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
 import java.net.URISyntaxException;
 
 
@@ -32,13 +30,14 @@ TO-DO:
 
 */
 
-public class Main extends Application implements Measurements {
+public class Main extends Application implements GameProperties {
 
-    Pane pane = new Pane();
-    static ImageView shipView;
+    private Pane pane = new Pane();
+    static ImageView shipView = null;
     static int velx = 0;
-    static double shipWidth = 0;
-    Timer timer;
+    static int hitCounter = 0;
+    private EnemyAliens ea = new EnemyAliens(pane);
+    private Fire fire = new Fire();
 
 
 
@@ -49,6 +48,7 @@ public class Main extends Application implements Measurements {
         background.setFitWidth(600);
         background.setFitHeight(350);
 
+
         Image ship = new Image("/Images/Spaceship.png");
         shipView = new ImageView(ship);
         shipView.setFitHeight(40);
@@ -56,9 +56,7 @@ public class Main extends Application implements Measurements {
         Tools.setCoordinates(shipView, 0, 670);
 
 
-
-//        ea.displayGrid();
-        pane.getChildren().addAll(shipView, Fire.score, Fire.gameHighScore);
+        pane.getChildren().addAll(shipView, Fire.score, Fire.gameHighScore, Fire.ufoHits);
 
         return pane;
     }
@@ -66,63 +64,72 @@ public class Main extends Application implements Measurements {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-//        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));\
 
-//        ea.createAlienGrid();
-        EnemyAliens ea = new EnemyAliens(pane);
+        //Console output explaining the game rules
+        System.out.println("Rules: \n" + "Kill 40 Enemy Aliens without getting hit before they reach the bottom of " +
+                "the screen and pass your fortifications. \n" + "Afterwards, kill the UFO by hitting it 100 times " +
+                "without getting hit by its rockets before it reaches the bottom of the screen and passes your " +
+                "fortifications. \nYou will receive bonus points if you win depending on how many shots you fired " +
+                "(time your shots, don't spam space). \n\n" + "Win Condition: Kill the UFO");
 
         ea.displayGrid();
-//        ea.alienFire();
-        Fire fire = new Fire(pane, 0, ea.getAlienGrid());
         fire.scores();
-        //        fire.alienFire();
         Scene scene = new Scene(Content(), screenWidth, screenHeight);
         scene.setFill(Color.BLACK);
         primaryStage.setTitle("Space Invaders!");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
-        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/Images/Space-invaders-logo.png")));
+        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/Images/Space Invaders Game.png")));
         primaryStage.show();
 
+        //Input - Processing - Output: Following code manages user inputs
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
-            //CALL ALIEN FIRE 
-
-
-            double velMissileCount = 750;
-            long timerBefore = 0;
-            long timerAfter;
+            long timerBefore = 0; //variable to track the time (milliseconds) before the user presses the space key
+            long timerAfter; //variable to track the time (milliseconds) after the user presses the space key
 
             @Override
-            public void handle(KeyEvent event) {
+            public void handle(KeyEvent event) { //Handle KeyEvents
 
-                if (event.getCode() == KeyCode.RIGHT && shipView.getLayoutX() <= 620 && !ea.stopMovement()) {
-                    velx += 10;
-                    shipView.setLayoutX(velx);
-//                    System.out.println(velx);
-                } else if (event.getCode() == KeyCode.LEFT && shipView.getLayoutX() >= 10 && !ea.stopMovement()) {
-                    velx -= 10;
-                    shipView.setLayoutX(velx);
-//                    System.out.println(velx);
-                } else if (event.getCode() == KeyCode.SPACE && !ea.stopMovement()) {
-                    timerAfter = System.currentTimeMillis();
+                //If user presses the right arrow key and the ship is within the window and the game hasn't ended:
+                if (event.getCode() == KeyCode.RIGHT && shipView.getLayoutX() <= 620 && !ea.stopAlienMovement() &&
+                        !ea.stopUFOMovement()) {
+
+                    velx += 10; //increase the x-coordinate by 10
+                    shipView.setLayoutX(velx); //set the ship's x-coordinate
+
+                //If user presses the right arrow key and the ship is within the window and the game hasn't ended:
+                } else if (event.getCode() == KeyCode.LEFT && shipView.getLayoutX() >= 10 && !ea.stopAlienMovement() &&
+                        !ea.stopUFOMovement()) {
+
+                    velx -= 10; //decrease the x-coordinate by 10
+                    shipView.setLayoutX(velx); //set the ship's x-coordinate
+
+                //If user presses the space key and the game hasn't ended:
+                } else if (event.getCode() == KeyCode.SPACE && !ea.stopAlienMovement() && !ea.stopUFOMovement()) {
+
+                    hitCounter += 1; //Track of how many times user shoots. This is used later to assign bonus points
+                    timerAfter = System.currentTimeMillis(); //Track the time (milliseconds) after user presses space
+
                     if (timerAfter - timerBefore <= 100) {
+                        //If user presses space repeatedly, ignore the inputs (spamming is unethical)
                         event.consume();
+
                     } else {
-//                    while (velMissileCount >= 0) {
-////                        velMissileCount -= 10;
-////                        missileView.setLayoutY(velMissileCount);
-////                        System.out.println(velMissileCount);
-//                    }
-//                    velMissileCount = 1100;
                         try {
-                            Media media = new Media(getClass().getResource("/Sounds/shoot.wav").toURI().toString());
+                            Media media = new Media(getClass().getResource("/Sounds/shoot.wav").toURI()
+                                    .toString());
                             MediaPlayer player = new MediaPlayer(media);
+                            player.setVolume(50);
                             player.play();
+                            //Whenever user shoots, play the sound effect
+
                         } catch (URISyntaxException e) {
                             e.printStackTrace();
                         }
-                        Fire f = new Fire(pane, velx, ea.getAlienGrid());
+
+                        Fire f = new Fire(pane, velx, ea.getAlienGrid(), ea.getUfoM());
+                        //Create instance of the Fire class and display the missile onto the screen
 
                     }
                     timerBefore = System.currentTimeMillis();

@@ -15,159 +15,65 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.net.URISyntaxException;
-import java.util.Random;
 
-public class EnemyAliens extends Properties implements Measurements {
+//Extending Properties class and implementing interface for screenWidth and screenHeight
+class EnemyAliens extends Properties implements GameProperties {
 
+    private Pane p;
 
-    /*
+    //Creating 2D array to that will hold each enemy alien
+    private ImageView[][] alienGrid = new ImageView[EnemyRow()][EnemyColumn()];
+    private Image ufo = new Image("/Images/ufo.png");
+    private ImageView ufoM = null;
 
-    Use formation.png
+    private Image largeInvader = new Image("/Images/large_invader_a.png");
+    private Timeline timeline;
+    private Timeline ufoTimeline;
 
-    */
-
-
-    Pane p;
-
-
-    ImageView[][] alienGrid = new ImageView[EnemyRow()][EnemyColumn()];
-    ImageView[] alien = new ImageView[EnemyRow() * EnemyColumn()];
-    Fire f;
-
-    Image enemyBullet = new Image("/Images/bullet.png");
-    ImageView alienBullet;
-    Image largeInvader = new Image("/Images/large_invader_a.png");
-    Image mediumInvader = new Image("/Images/medium_invader_a.png");
-    Image mediumInvaderA;
-    Image mediumInvaderB;
-    Image smallInvader;
-    Timeline timeline;
-    Timeline alienTimeline;
-    int time = 28;
-    int bulletTime = 28;
-    int move = 0;
-    boolean right = true;
-    static Rectangle pointer = new Rectangle();
-
-    Rectangle rec = null;
-    boolean bullet = true;
-    boolean game = false;
-
+    private int time = 28;
     static int alienNullCount = 0;
+    static int ufoHitCount = 0;
     static boolean shipHit = false;
-    Font arcade = Font.loadFont(Main.class.getResource("/Fonts/ARCADE_I.ttf").toExternalForm(), 75);
+    static boolean ufoHit = false;
+
+    private boolean right = true;
+    private boolean ufoMove = true;
+    private boolean stopAlienMovement = false;
+    private boolean stopUFOMovement = false;
+
+    private static Rectangle pointer = new Rectangle();
+    private static Rectangle ufoPointer = new Rectangle();
+
+    private Font arcade = Font.loadFont(Main.class.getResource("/Fonts/ARCADE_I.ttf").toExternalForm(), 75);
 
 
-    public EnemyAliens(Pane p) {
+    EnemyAliens(Pane p) {
         super();
         this.p = p;
-//
-//        if (alienBullet == null) {
-//            alienBullet = new ImageView(enemyBullet);
-//            p.getChildren().add(alienBullet);
-//            Timeline alienTime;
-//            Random rn = new Random();
-//            int row = rn.nextInt(4);
-//            int col = rn.nextInt(10);
-//
-//            if (alienGrid[row][col] != null) {
-//                alienBullet.setX(alienGrid[row][col].getX());
-//                alienBullet.setY(alienGrid[row][col].getY());
-//
-//
-////                System.out.println("X: " + alienBullet.getX());
-////                System.out.println("Y: " + alienBullet.getY());
-////
-////                System.out.println("SHIP X:" + Main.shipView.getLayoutX());
-////                System.out.println("SHIP Y:" + Main.shipView.getLayoutY());
-//
-//
-//                Duration duration = new Duration(5);
-//                KeyFrame keyFrame = new KeyFrame(duration, e -> {
-//                    if (alienBullet != null) {
-//                        alienBullet.setY(alienBullet.getY() + 5);
-////                        shipHit();
-//                    }
-//                });
-//
-//                alienTime = new Timeline(keyFrame);
-//                alienTime.setCycleCount(Animation.INDEFINITE);
-//                alienTime.play();
-//
-//
-//            }
-//        }
     }
 
 
-    public EnemyAliens() {
+    EnemyAliens() {
 
     }
 
-//    public ImageView getLargeInvader() {
-//        largeInvader = new Image("/Images/large_invader_a.png");
-//        return new ImageView(largeInvader);
-//    }
-
-//    public ImageView getMediumInvaderA() {
-//        mediumInvaderA = new Image("/Images/medium_invader_a.png");
-//        return new ImageView(mediumInvaderA);
-//    }
-
-    public ImageView getMediumInvaderB() {
-        mediumInvaderB = new Image("/Images/medium_invader_b.png");
-        return new ImageView(mediumInvaderB);
-    }
-
-    public ImageView getSmallInvader() {
-        smallInvader = new Image("/Images/small_invader_a.png");
-        return new ImageView(smallInvader);
-    }
-//    public void createAlienGrid() {
-//        int row = 0;
-//        alienGrid = new ImageView[enemyColumn * enemyRow];
-//        while (row < 4) {
-//            for (int col = 0; col < alienGrid[0].length; col++) {
-//                if (row == 0) {
-//                    alienGrid[0][col] = getLargeInvader();
-//                } else if (row == 1) {
-//                    alienGrid[1][col] = getMediumInvaderA();
-//                } else if (row == 2) {
-//                    alienGrid[2][col] = getMediumInvaderB();
-//                } else if (row == 3) {
-//                    alienGrid[3][col] = getSmallInvader();
-//                }
-//            }
-//            row++;
-//
-//        }
-//
-//    }
-//
-
-
-    //
-//    public int getScore() {
-//        return score;
-//    }
-//
-
-    public void alienMovement() {
+    private void alienMovement() {
         if (right) {
             if (pointer.getX() + EnemyEdge() >= 280) {
                 right = false;
-                for (int i = 0; i < alienGrid.length; i++) {
-                    for (int j = 0; j < alienGrid[0].length; j++) {
+                for (int i = 0; i < EnemyRow(); i++) {
+                    for (int j = 0; j < EnemyColumn(); j++) {
                         if (alienGrid[i][j] != null) {
                             alienGrid[i][j].setY(alienGrid[i][j].getY() + 50);
                         }
                     }
                 }
             }
-            for (int i = 0; i < alienGrid.length; i++) {
-                for (int j = 0; j < alienGrid[0].length; j++) {
+            for (int i = 0; i < EnemyRow(); i++) {
+                for (int j = 0; j < EnemyColumn(); j++) {
                     if (alienGrid[i][j] != null) {
                         alienGrid[i][j].setX(alienGrid[i][j].getX() + AlienSpeed());
+                        //The x-coordinates for each alien increases depending on its speed (e.g. +10 and -10)
                     }
                 }
             }
@@ -175,210 +81,295 @@ public class EnemyAliens extends Properties implements Measurements {
         } else {
             if (pointer.getX() - ((EnemyEdge() * (EnemyColumn() + 2))) <= -490) {
                 right = true;
-                for (int i = 0; i < alienGrid.length; i++) {
-                    for (int j = 0; j < alienGrid[0].length; j++) {
+                for (int i = 0; i < EnemyRow(); i++) {
+                    for (int j = 0; j < EnemyColumn(); j++) {
                         if (alienGrid[i][j] != null) {
                             alienGrid[i][j].setY(alienGrid[i][j].getY() + 50);
                         }
                     }
                 }
             }
-            for (int i = 0; i < alienGrid.length; i++) {
-                for (int j = 0; j < alienGrid[0].length; j++) {
+            for (int i = 0; i < EnemyRow(); i++) {
+                for (int j = 0; j < EnemyColumn(); j++) {
                     if (alienGrid[i][j] != null) {
                         alienGrid[i][j].setX(alienGrid[i][j].getX() - AlienSpeed());
                     }
                 }
             }
             pointer.setX(pointer.getX() - AlienSpeed());
-            stopMovement();
-
-            for (int i = 0; i < alienGrid.length; i++) {
-                for (int j = 0; j < alienGrid[0].length; j++) {
-//                    System.out.println("HELLO: " + alienGrid[i][j].getY());
-//                    if (alienGrid[i][j].getY() >= 750) {
-////                    Add AlertBox functionality
-//                    }
-                }
-            }
+            stopAlienMovement();
         }
     }
 
 
-//    public void alienMovement() {
-//        if (right) {
-//            if (pointer.getX() + EnemyEdge() >= 280) {
-//                right = false;
-//                for (int i = 0; i < alien.length; i++) {
-//                        if (alien[i] != null) {
-//                            alien[i].setY(alien[i].getY() + 50);
-//                        }
-//                }
-//            }
-//            for (int i = 0; i < alien.length; i++) {
-//                    if (alien[i] != null) {
-//                        alien[i].setX(alien[i].getX() + AlienSpeed());
-//                    }
-//            }
-//            pointer.setX(pointer.getX() + AlienSpeed());
-//        } else {
-//            if (pointer.getX() - ((EnemyEdge() * (EnemyColumn() + 2))) <= -490) {
-//                right = true;
-//                for (int i = 0; i < alien.length; i++) {
-//                        if (alien[i] != null) {
-//                            alien[i].setY(alien[i].getY() + 50);
-//                        }
-//                }
-//            }
-//            for (int i = 0; i < alien.length; i++) {
-//                    if (alien[i] != null) {
-//                        alien[i].setX(alien[i].getX() - AlienSpeed());
-//                    }
-//            }
-//            pointer.setX(pointer.getX() - AlienSpeed());
-//            stopMovement();
-//
-//            for (int i = 0; i < alien.length; i++) {
-////                    System.out.println("HELLO: " + alienGrid[i][j].getY());
-//                    if (alien[i].getY() >= 750) {
-////                    Add AlertBox functionality
-//                    }
-//            }
-//        }
-//    }
+    private void ufoMovement() {
+        if (ufoMove) {
+            if (ufoPointer.getX() + EnemyEdge() >= 600) {
+                ufoMove = false;
+                if (ufoM != null) {
+                    ufoM.setY(ufoM.getY() + 30);
+                }
+            }
+
+            if (ufoM != null) {
+                ufoM.setX(ufoM.getX() + ufoSpeed());
+                //The x-coordinate for the enemy UFO increases based on its speed
+            }
+            ufoPointer.setX(ufoPointer.getX() + ufoSpeed());
+
+        } else {
+            if (ufoPointer.getX() - ((EnemyEdge() * (EnemyColumn() + 2))) <= -490) {
+                ufoMove = true;
+
+                if (ufoM != null) {
+                    ufoM.setY(ufoM.getY() + 30);
+                }
+            }
+            if (ufoM != null) {
+                ufoM.setX(ufoM.getX() - ufoSpeed());
+            }
+
+            ufoPointer.setX(ufoPointer.getX() - ufoSpeed());
+            stopUFOMovement();
+        }
+    }
+
+    private void displayUFO() {
+        int ufoTime = 50;
+//        ufoArray[0].setFitWidth(250);
+//        ufoArray[0].setFitHeight(150);
+        if (ufoM == null) {
+            ufoM = new ImageView(ufo);
+            Tools.setCoordinates(ufoM, 0, 60);
+            ufoM.setFitHeight(120);
+            ufoM.setFitWidth(170);
+            p.getChildren().add(ufoM);
+            ufoTime -= 3;
+
+            Duration dur = new Duration(ufoTime);
+            KeyFrame frame = new KeyFrame(dur, e -> ufoMovement());
+            ufoTimeline = new Timeline(frame);
+            ufoTimeline.setCycleCount(Animation.INDEFINITE);
+            ufoTimeline.play();
+        }
+    }
 
 
-    public boolean stopMovement() {
-        for (int i = 0; i < alienGrid.length; i++) {
-            for (int j = 0; j < alienGrid[0].length; j++) {
-//                System.out.println("HELLO X: " + alienGrid[i][j].getX());
-//                System.out.println("HELLO Y: " + alienGrid[i][j].getY());
+    //Repetition:
+    //The following code checks to see if the user has lost Level 1 or won Level 1
+    // by iterating through the 2D array using for-loops
+    boolean stopAlienMovement() {
+        for (int i = 0; i < EnemyRow(); i++) { //For each row in the array
+            for (int j = 0; j < EnemyColumn(); j++) { //For each column in the array
+
+                //If any elements in the 2D array are not set to null
+                // (have not died. This means that some of the aliens are still alive)
+                // and the aliens have passed the fortifications (bottom of the screen)
+                // OR the user's ship has been hit:
+
                 if ((alienGrid[i][j] != null && alienGrid[i][j].getY() >= 700) || shipHit) {
-//                    Add AlertBox functionality
-                    timeline.stop();
-                    Text gameOver = new Text(0, 350, "Game Over!");
+                    timeline.stop(); //This stops the alien animation from moving
+                    Text gameOver = new Text(0, 350, "Game Over!"); //Creates game over text
+
+                    //Setting properties for game over text and adding it onto the scene
                     gameOver.setFill(Color.YELLOW);
                     gameOver.setFont(arcade);
                     p.getChildren().add(gameOver);
+
+                    //Playing the Game Over soundtrack
                     try {
                         Media media = new Media(getClass().getResource("/Sounds/Game Over.mp3").toURI().toString());
                         MediaPlayer player = new MediaPlayer(media);
-                        player.setVolume(1000);
                         player.play();
-                        game = true;
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-
-                } else if (alienNullCount == 40) {
-                    timeline.stop();
-                    Text win = new Text(130, 350, "Winner!");
-                    win.setFill(Color.YELLOW);
-                    win.setFont(arcade);
-                    p.getChildren().add(win);
-                    try {
-                        Media media = new Media(getClass().getResource("/Sounds/Victory.mp3").toURI().toString());
-                        MediaPlayer player = new MediaPlayer(media);
-                        player.setVolume(1000);
-                        player.play();
-                        game = true;
+                        stopAlienMovement = true; //This variable indicates that the game is over
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
                 }
             }
         }
-        return game;
+
+        //If the above if statement is false, this means the user wins the first Level and  moves onto the final stage
+        if (alienNullCount == 40) { //User killed all 40 enemy aliens
+            displayUFO(); //Calling the displayUFO() method which adds the enemy UFO onto the scene
+        }
+        return stopAlienMovement;
     }
 
-    public void alienFire() {
-        alienBullet = new ImageView(enemyBullet);
-        p.getChildren().add(alienBullet);
-//        System.out.println("WHILE TEST");
+    boolean stopUFOMovement() {
 
-        for (int i = 0; i < alienGrid.length; i++) {
-            for (int j = 0; j < alienGrid[0].length; j++) {
+        if (ufoM != null && ufoHitCount != 10 && ufoM.getY() > 550 || ufoHit) {
 
-                if (alienGrid[i][j] != null) {
-                    alienBullet.setX(alienGrid[i][j].getX() + 5);
-                    alienBullet.setY(alienGrid[i][j].getY());
+            //Stop the game if the UFO ImageView hasn't been hit 100 times and has reached the bottom of the screen,
+            // or if the user's ship has been hit
+            ufoTimeline.stop();
 
-//                } else {
-//
-//                    System.out.println("NO");
-//                }
-                }
+            //Create text to inform user that they have lost
+            Text gameOver = new Text(0, 350, "Game Over!");
+            gameOver.setFill(Color.YELLOW);
+            gameOver.setFont(arcade);
+
+            //Add the text to scene
+            p.getChildren().add(gameOver);
+
+            //Enclosed in try-catch to catch URISyntaxException.
+            // This exception occurs when the string can't be parsed into a URI.
+            // For adding any Media, this exception has to be used
+            try {
+                Media media = new Media(getClass().getResource("/Sounds/Game Over.mp3").toURI().toString());
+                MediaPlayer player = new MediaPlayer(media);
+                player.play();
+                stopUFOMovement = true;
+            } catch (URISyntaxException e) {
+                System.out.println("Error: " + e);
             }
+
+        } else if (ufoHitCount == 10) {
+
+            //Stop the game if the UFO ImageView has been hit 100 times
+            ufoTimeline.stop();
+            ufoM.setVisible(false);
+
+            //Create text to inform user they have won
+            Text win = new Text(130, 350, "Winner!");
+            win.setFill(Color.YELLOW);
+            win.setFont(arcade);
+
+            //Add the text to the scene
+            p.getChildren().add(win);
+
+            try {
+                Media media = new Media(getClass().getResource("/Sounds/Victory.mp3").toURI().toString());
+                MediaPlayer player = new MediaPlayer(media);
+                player.play();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+            //Control Structure:
+            //Once the user wins the game, begin assigning bonus points
+            // Bonus points are only assigned if user wins defeats the boss
+
+            if (Main.hitCounter <= 140) { //If the user fires 140 shots or less (1 shot = 1 kill): 5000 bonus points
+
+                //Text to inform user of bonus points earned and number of shots fired
+                Text bonus = new Text(130, 370, "Bonus Points: " + 5000);
+                Text missilesFired = new Text(130, 390, "Missile's Fired: " + Main.hitCounter);
+
+                //Add 5000 to user's base points
+                Fire.points += 5000;
+
+                //Create instance of Fire class and call the scores method to check for high scores
+                Fire fire = new Fire();
+                fire.scores();
+
+                //Set the score text to user's new total score along with setting the text's properties
+                Fire.score.setText("Score: " + Fire.points);
+                bonus.setStyle("-fx-font-size: 12");
+                bonus.setFill(Color.YELLOW);
+                bonus.setFont(arcade);
+                //Setting properties for Missile's Fired text and adding everything onto the scene
+                missilesFired.setStyle("-fx-font-size: 12");
+                missilesFired.setFill(Color.YELLOW);
+                missilesFired.setFont(arcade);
+                p.getChildren().addAll(bonus, missilesFired);
+
+
+            }else if (Main.hitCounter <= 200) {//If the user fires 200 shots or less: 3000 bonus points
+
+                //Text to inform user of bonus points earned and number of shots fired
+                Text bonus = new Text(130, 370, "Bonus Points: " + 3000);
+                Text missilesFired = new Text(130, 390, "Missile's Fired: " + Main.hitCounter);
+
+                //Add 3000 to the user's base points
+                Fire.points += 3000;
+
+                //Create instance of Fire class and call the scores method again to check for any new high scores
+                Fire fire = new Fire();
+                fire.scores();
+
+                //Set the score text to user's new total score
+                Fire.score.setText("Score: " + Fire.points);
+                bonus.setStyle("-fx-font-size: 12");
+                bonus.setFill(Color.YELLOW);
+                bonus.setFont(arcade);
+                //Setting properties for Missile's Fired text and adding everything onto the scene
+                missilesFired.setStyle("-fx-font-size: 12");
+                missilesFired.setFill(Color.YELLOW);
+                missilesFired.setFont(arcade);
+                p.getChildren().addAll(bonus, missilesFired);
+
+            } else if (Main.hitCounter <= 250) {//If user fires 250 shots or less: 1000 bonus points
+
+                //Text to inform user of bonus points earned and number of shots fired
+                Text bonus = new Text(130, 370, "Bonus Points: " + 1000);
+                Text missilesFired = new Text(130, 390, "Missile's Fired: " + Main.hitCounter);
+
+                //Add 1000 to the user's base points
+                Fire.points += 1000;
+
+                //Create instance of Fire class and call the scores method to check for any new high scores
+                Fire fire = new Fire();
+                fire.scores();
+
+                //Set the score text to the user's new total score
+                Fire.score.setText("Score: " + Fire.points);
+                bonus.setStyle("-fx-font-size: 12");
+                bonus.setFill(Color.YELLOW);
+                bonus.setFont(arcade);
+                //Setting properties for Missile's Fired text and adding everything onto the scene
+                missilesFired.setStyle("-fx-font-size: 12");
+                missilesFired.setFill(Color.YELLOW);
+                missilesFired.setFont(arcade);
+                p.getChildren().addAll(bonus, missilesFired);
+
+            } else {//If user fires more than 250 shots: No bonus points
+
+                //Text to inform user of no bonus points earned and the number of shots they fired
+                Text bonus = new Text(130, 370, "Bonus Points: " + 0);
+                Text missilesFired = new Text(130, 390, "Missile's Fired: " + Main.hitCounter);
+
+                //Set the properties of the bonus and missilesFired text and add it onto the scene
+                bonus.setStyle("-fx-font-size: 12");
+                bonus.setFill(Color.YELLOW);
+                bonus.setFont(arcade);
+                missilesFired.setStyle("-fx-font-size: 12");
+                missilesFired.setFill(Color.YELLOW);
+                missilesFired.setFont(arcade);
+                p.getChildren().addAll(bonus, missilesFired);
+            }
+            stopUFOMovement = true; //This variable indicates that the game is now over
         }
 
-            for (int i = 0; i < alienGrid.length; i++) {
-                for (int j = 0; j < alienGrid[0].length; j++) {
+        return stopUFOMovement;
+    }
 
-                    if (alienGrid[i][j] != null) {
-                        alienBullet.setY(alienBullet.getY() + 10);
-                    } else {
-                        System.out.println("send help");
-                    }
-                }
-            }
-//
-//        Duration duration = new Duration(5);
-//        KeyFrame keyFrame = new KeyFrame(duration, e -> {
-//            if (alienGrid[row][j] != null) {
-//                alienBullet.setY(alienBullet.getY() + 5);
-//            }
-//        });
-//        alienTimeline = new Timeline(keyFrame);
-//        alienTimeline.setCycleCount(Animation.INDEFINITE);
-        }
+    //Data Structures:
+    //This method uses the created 2D ImageView array and fills it up with enemy aliens
+    // The array is composed of 4 rows and 10 columns
+    void displayGrid() {
 
+        for (int row = 0; row < EnemyRow(); row++) { //For each row in the array
+            for (int col = 0; col < EnemyColumn(); col++) { //For each column in the array
 
-    public void displayGrid() {
-
-        for (int row = 0; row < EnemyRow(); row++) {
-            for (int col = 0; col < EnemyColumn(); col++) {
-
+                //As the array is filled, it is surrounded by try-catch so the array can't go out of the index range
                 try {
+
+                    //Fill each row column spot with the enemy alien image
                     alienGrid[row][col] = new ImageView(largeInvader);
+
+                    //Preserving the aspect ratio of the original image when it is fitted into the array
                     alienGrid[row][col].setPreserveRatio(true);
+
+                    //Space out the aliens in the array rather than having them all on top of each other
                     alienGrid[row][col].setX(col * 50);
                     alienGrid[row][col].setY(row * 50);
-                    alienGrid[row][col].setFitWidth(EnemyEdge());
-                    alien[row * EnemyColumn() + col] = new ImageView(largeInvader);
-                    alien[row * EnemyColumn() + col].setPreserveRatio(true);
-                    alien[row * EnemyColumn() + col].setX(col * 50);
-                    alien[row * EnemyColumn() + col].setY(row * 50);
-                    alien[row * EnemyColumn() + col].setFitWidth(EnemyEdge());
-                    p.getChildren().add(alienGrid[row][col]);
-//                    p.getChildren().add(alien[row * EnemyColumn() + col]);
+                    alienGrid[row][col].setFitWidth(EnemyEdge()); //Set width of each individual alien in the array
+                    p.getChildren().add(alienGrid[row][col]); //Add each alien to the scene
+
                 } catch (ArrayIndexOutOfBoundsException e) {
 //
                 }
-
-
-                //aliendGrid[row * enemyColumn][row * enemyColumn + 1] = ....;
-//
-//                alienGrid[row * EnemyColumn() + col] = new ImageView(largeInvader);
-//                alienGrid[row * EnemyColumn() + col].setPreserveRatio(true);
-//                alienGrid[row * EnemyColumn() + col].setX(col * 50);
-//                alienGrid[row * EnemyColumn() + col].setY(row * 50);
-//                alienGrid[row * EnemyColumn() + col].setFitWidth(enemyEdge);
-//                p.getChildren().add(alienGrid[row * EnemyColumn() + col]);
-//                if (col == EnemyColumn() - 1 && row == 0) {
-//                    pointer.setWidth(EnemyEdge());
-//                    pointer.setHeight(EnemyEdge());
-//                    pointer.setFill(Color.TRANSPARENT);
-//                    pointer.setX(alienGrid[col].getX() + EnemyEdge());
-//                }
-
-//
-//                Tools.setCoordinates(alienGrid[row * alienGrid[0].length + col], (col * 50), (row * 50));
-////                ImageView image = new ImageView(alienGrid[row][col]);
-////                Tools.setCoordinates(alienGrid[row][col], 500, 250); //Figure out how to print them in array format
-//                p.getChildren().add(alienGrid[row * alienGrid[0].length + col][row * alienGrid[0].length + col]);
-////                if (col == alienGrid[0].length - 1 && row == 0) {
-
-//                }
             }
         }
         time -= 3;
@@ -388,29 +379,15 @@ public class EnemyAliens extends Properties implements Measurements {
         timeline = new Timeline(frame);
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
-
-//
-//        Duration duration = new Duration(5);
-//        KeyFrame keyFrame = new KeyFrame(duration, e -> alienFire());
-//        alienTimeline = new Timeline(keyFrame);
-//        alienTimeline.setCycleCount(Animation.INDEFINITE);
-//        alienTimeline.play();
-
-
     }
 
-    //21:46:06
-
-//
-//    public ImageView[][] getAlienGrid() {
-//        return alienGrid;
-//    }
-
-
-    public ImageView[][] getAlienGrid() {
+    ImageView[][] getAlienGrid() {
         return alienGrid;
     }
 
+    ImageView getUfoM() {
+        return ufoM;
+    }
 }
 
 

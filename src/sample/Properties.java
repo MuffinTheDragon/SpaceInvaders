@@ -1,22 +1,23 @@
 package sample;
 
-public class Properties {
+class Properties {
 
 
     private int enemyEdge = 40;
     private int enemyRow = 4;
     private int enemyColumn = 10;
-    private int alienSpeed = 1;
+    private int alienSpeed = 2;
+    private int ufoSpeed = 7;
 
 
-    public int EnemyEdge() {
+    int EnemyEdge() {
 
         //The edge enemy aliens can go to
 
         return enemyEdge;
     }
 
-    public int EnemyRow() {
+    int EnemyRow() {
 
         //Number of enemy alien rows
 
@@ -24,18 +25,25 @@ public class Properties {
     }
 
 
-    public int EnemyColumn() {
+    int EnemyColumn() {
 
         //Number of enemy alien columns
 
         return enemyColumn;
     }
 
-    public int AlienSpeed() {
+    int AlienSpeed() {
 
         //Speed of enemy aliens
 
         return alienSpeed;
+    }
+
+    int ufoSpeed() {
+
+        //Speed of enemy UFO
+
+        return ufoSpeed;
     }
 
 }
