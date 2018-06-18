@@ -55,7 +55,6 @@ public class Main extends Application implements GameProperties {
         shipView.setFitWidth(80);
         Tools.setCoordinates(shipView, 0, 670);
 
-
         pane.getChildren().addAll(shipView, Fire.score, Fire.gameHighScore, Fire.ufoHits);
 
         return pane;
@@ -79,7 +78,7 @@ public class Main extends Application implements GameProperties {
         primaryStage.setTitle("Space Invaders!");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
-        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/Images/Space Invaders Game.png")));
+        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/Images/space-invaders-logo.png")));
         primaryStage.show();
 
         //Input - Processing - Output: Following code manages user inputs
@@ -92,19 +91,19 @@ public class Main extends Application implements GameProperties {
             public void handle(KeyEvent event) { //Handle KeyEvents
 
                 //If user presses the right arrow key and the ship is within the window and the game hasn't ended:
-                if (event.getCode() == KeyCode.RIGHT && shipView.getLayoutX() <= 620 && !ea.stopAlienMovement()) {
+                if (event.getCode() == KeyCode.RIGHT && shipView.getLayoutX() <= 620 && !ea.stopAlienMovement() && !ea.stopUFOMovement) {
 
                     velx += 10; //increase the x-coordinate by 10
                     shipView.setLayoutX(velx); //set the ship's x-coordinate
 
                 //If user presses the right arrow key and the ship is within the window and the game hasn't ended:
-                } else if (event.getCode() == KeyCode.LEFT && shipView.getLayoutX() >= 10 && !ea.stopAlienMovement()) {
+                } else if (event.getCode() == KeyCode.LEFT && shipView.getLayoutX() >= 10 && !ea.stopAlienMovement() && !ea.stopUFOMovement) {
 
                     velx -= 10; //decrease the x-coordinate by 10
                     shipView.setLayoutX(velx); //set the ship's x-coordinate
 
                 //If user presses the space key and the game hasn't ended:
-                } else if (event.getCode() == KeyCode.SPACE && !ea.stopAlienMovement()) {
+                } else if (event.getCode() == KeyCode.SPACE && !ea.stopAlienMovement() && !ea.stopUFOMovement) {
 
                     hitCounter += 1; //Track of how many times user shoots. This is used later to assign bonus points
                     timerAfter = System.currentTimeMillis(); //Track the time (milliseconds) after user presses space

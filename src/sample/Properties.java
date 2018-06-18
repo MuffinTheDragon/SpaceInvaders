@@ -6,8 +6,8 @@ class Properties {
     private int enemyEdge = 40;
     private int enemyRow = 4;
     private int enemyColumn = 10;
-    private int alienSpeed = 2;
-    private int ufoSpeed = 7;
+    private int alienSpeed = 3;
+    private int ufoSpeed = 8;
 
 
     int EnemyEdge() {

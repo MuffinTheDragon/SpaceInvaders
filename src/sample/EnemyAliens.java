@@ -39,7 +39,7 @@ class EnemyAliens extends Properties implements GameProperties {
     private boolean right = true;
     private boolean ufoMove = true;
     private boolean stopAlienMovement = false;
-    private boolean stopUFOMovement = false;
+    public boolean stopUFOMovement = false;
 
     private static Rectangle pointer = new Rectangle();
     private static Rectangle ufoPointer = new Rectangle();
@@ -97,8 +97,8 @@ class EnemyAliens extends Properties implements GameProperties {
                 }
             }
             pointer.setX(pointer.getX() - AlienSpeed());
-            stopAlienMovement();
         }
+        stopAlienMovement();
     }
 
 
@@ -130,8 +130,8 @@ class EnemyAliens extends Properties implements GameProperties {
             }
 
             ufoPointer.setX(ufoPointer.getX() - ufoSpeed());
-            stopUFOMovement();
         }
+        stopUFOMovement();
     }
 
     private void displayUFO() {
@@ -203,6 +203,8 @@ class EnemyAliens extends Properties implements GameProperties {
             //Stop the game if the UFO ImageView hasn't been hit 100 times and has reached the bottom of the screen,
             // or if the user's ship has been hit
             ufoTimeline.stop();
+            ufoM.setVisible(false);
+            ufoM.setY(700);
 
             //Create text to inform user that they have lost
             Text gameOver = new Text(0, 350, "Game Over!");
@@ -223,7 +225,6 @@ class EnemyAliens extends Properties implements GameProperties {
             } catch (URISyntaxException e) {
                 System.out.println("Error: " + e);
             }
-
         } else if (ufoHitCount == 100) {
 
             //Stop the game if the UFO ImageView has been hit 100 times
@@ -340,9 +341,8 @@ class EnemyAliens extends Properties implements GameProperties {
                 missilesFired.setFont(arcade);
                 p.getChildren().addAll(bonus, missilesFired);
             }
-            stopUFOMovement = true; //This variable indicates that the game is now over
+            stopUFOMovement = true;
         }
-
     }
 
     //Data Structures:

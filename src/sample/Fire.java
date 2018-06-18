@@ -29,6 +29,7 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
     static int points = 0;
     private int lastScore = 0;
 
+
     private Font arcade = Font.loadFont(Main.class.getResource("/Fonts/ARCADE_I.ttf").toExternalForm(), 25);
 
     static final Text score = new Text(0, 25, "Score: " + points);
@@ -79,7 +80,7 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
             Image enemyBullet = new Image("/Images/bullet.png");
             alienBullet = new ImageView(enemyBullet);
             p.getChildren().add(alienBullet);
-            Timeline timeline;
+            Timeline alienTimeline;
             Random rn = new Random();
             int row = rn.nextInt(4);
             int col = rn.nextInt(10);
@@ -89,17 +90,6 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
                 alienBullet.setX(alienGrid[row][col].getX());
                 alienBullet.setY(alienGrid[row][col].getY());
 
-
-//                System.out.println("X: " + alienBullet.getX());
-//                System.out.println("Y: " + alienBullet.getY());
-//                System.out.println("VELX: " + Main.velx);
-//                System.out.println("BULLET Y: " + alienBullet.getY());
-//                System.out.println("BULLEt X: " + alienBullet.getX());
-//                System.out.println("SHIP X:" + Main.shipView.getLayoutX());
-//                System.out.println("SHIP Y:" + Main.shipView.getLayoutY());
-
-//                System.out.println("MISSILE Y: " + missileView.getY());
-
                 Duration duration = new Duration(5);
                 KeyFrame keyFrame = new KeyFrame(duration, e -> {
                     if (alienBullet != null) {
@@ -108,9 +98,9 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
                     }
                 });
 
-                timeline = new Timeline(keyFrame);
-                timeline.setCycleCount(Animation.INDEFINITE);
-                timeline.play();
+                alienTimeline = new Timeline(keyFrame);
+                alienTimeline.setCycleCount(Animation.INDEFINITE);
+                alienTimeline.play();
 
             }
         }
@@ -122,6 +112,8 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
             if (ufoRocket == null) {
                 Image ufoBullet = new Image("Images/rocket.png");
                 ufoRocket = new ImageView(ufoBullet);
+                ufoRocket.setFitWidth(64);
+                ufoRocket.setFitHeight(64);
                 p.getChildren().add(ufoRocket);
                 Timeline ufoTimeline;
                 Random rn = new Random();
@@ -134,8 +126,8 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
                 KeyFrame keyFrame = new KeyFrame(duration, e -> {
                     if (ufoRocket != null) {
                         ufoRocket.setY(ufoRocket.getY() + 1);
-                        rocketHit();
                         ufoHit(alienUFO);
+                        rocketHit();
                     }
                 });
 
@@ -160,8 +152,7 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
         // units
         if (alienBullet != null) {
             if (alienBullet.getX() < Main.velx + Main.shipView.getFitWidth() && alienBullet.getX() + 1 > Main.velx &&
-                    alienBullet.getY() < 670 +
-                    Main.shipView.getFitHeight() && 5 + alienBullet.getY() > 670) {
+                    alienBullet.getY() < 670 + Main.shipView.getFitHeight() && 5 + alienBullet.getY() > 670) {
 
                 //This variable determines whether or not the user's ship has been hit by enemy aliens
                 //It is then used in the stopAlienMovement() method in the EnemyAliens class to stop the game
@@ -173,8 +164,9 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
 
     private void rocketHit() {
         if (ufoRocket != null) {
-            if (ufoRocket.getX() < Main.velx + Main.shipView.getFitWidth() && ufoRocket.getX() + 1 > Main.velx &&
-                    ufoRocket.getY() < 670 + Main.shipView.getFitHeight() && 5 + ufoRocket.getY() > 670) {
+            if (ufoRocket.getX() < Main.velx + Main.shipView.getFitWidth() && ufoRocket.getX() + 55
+                    > Main.velx && ufoRocket.getY() < 670 + Main.shipView.getFitHeight() && 40 +
+                    ufoRocket.getY() > 670) {
 
                 //This variable determines whether or not the user's ship has been hit by the enemy UFO
                 //It is then used in the stopUFOMovement() method in the EnemyAliens class to stop the game
