@@ -164,7 +164,7 @@ class Fire extends EnemyAliens { //Inherit EnemyAliens class
 
     private void rocketHit() {
         if (ufoRocket != null) {
-            if (ufoRocket.getX() < Main.velx + Main.shipView.getFitWidth() && ufoRocket.getX() + 55
+            if (ufoRocket.getX() < Main.velx + Main.shipView.getFitWidth() && ufoRocket.getX() + 56
                     > Main.velx && ufoRocket.getY() < 670 + Main.shipView.getFitHeight() && 40 +
                     ufoRocket.getY() > 670) {
 

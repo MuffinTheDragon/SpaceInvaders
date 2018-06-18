@@ -96,13 +96,13 @@ public class Main extends Application implements GameProperties {
                     velx += 10; //increase the x-coordinate by 10
                     shipView.setLayoutX(velx); //set the ship's x-coordinate
 
-                //If user presses the right arrow key and the ship is within the window and the game hasn't ended:
+                    //If user presses the right arrow key and the ship is within the window and the game hasn't ended:
                 } else if (event.getCode() == KeyCode.LEFT && shipView.getLayoutX() >= 10 && !ea.stopAlienMovement && !ea.stopUFOMovement) {
 
                     velx -= 10; //decrease the x-coordinate by 10
                     shipView.setLayoutX(velx); //set the ship's x-coordinate
 
-                //If user presses the space key and the game hasn't ended:
+                    //If user presses the space key and the game hasn't ended:
                 } else if (event.getCode() == KeyCode.SPACE && !ea.stopAlienMovement && !ea.stopUFOMovement) {
 
                     hitCounter += 1; //Track of how many times user shoots. This is used later to assign bonus points
